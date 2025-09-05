@@ -27,8 +27,8 @@ Git
 ## Instalación
 
   1️. Clonar el repositorio
-    git clone https://github.com/tu_usuario/tu_repo.git
-    cd appElGustador
+    git clone https://github.com/Yan-Tovar/appelgustador.git
+    cd appelgustador
     
   2. Configurar el Backend (Django + DRF)
     Crear y activar entorno virtual:
