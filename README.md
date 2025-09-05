@@ -27,36 +27,41 @@ Git
 ## Instalación
 
   1️. Clonar el repositorio
-    1. git clone https://github.com/Yan-Tovar/appelgustador.git
-    2. cd appelgustador
+  
+    git clone https://github.com/Yan-Tovar/appelgustador.git
+    cd appelgustador
     
   2. Configurar el Backend (Django + DRF)
+     
     1. Crear y activar entorno virtual:
       python -m venv venv
       venv\Scripts\activate     # Windows
       source venv/bin/activate  # Linux/Mac
+     
     2. Instalar dependencias:
       pip install -r requirements.txt
-      Si aún no tienes requirements.txt, puedes generarlo con:
-      pip freeze > requirements.txt
+     
     3. Aplicar migraciones y correr servidor:
       python manage.py migrate
       python manage.py runserver
 
-    # El backend estará disponible en:
+    4. El backend estará disponible en:
       http://127.0.0.1:8000/
       http://127.0.0.1:8000/api/  (endpoints) 
       
   3. Configurar el Frontend (React)
-     1. Entrar en la carpeta frontend/:
-       cd frontend
-     2. Instalar dependencias:
-       npm install
-     2. Iniciar servidor de desarrollo:
-       npm start
-
-     # El frontend estará disponible en:
-       http://localhost:3000/
+    
+           1. Entrar en la carpeta frontend/:
+             cd frontend
+     
+           2. Instalar dependencias:
+             npm install
+     
+           3. Iniciar servidor de desarrollo:
+             npm start
+     
+           4. El frontend estará disponible en:
+             http://localhost:3000/
       
 ## Roadmap del proyecto
 
