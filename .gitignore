@@ -1,0 +1,63 @@
+# =====================================
+# Python / Django
+# =====================================
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+db.sqlite3
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+ENV/
+
+# Archivos de configuración locales
+.env
+*.env
+
+# Archivos de compilación / cache
+*.egg-info/
+.eggs/
+*.egg
+.Python
+
+# Archivos estáticos y media (si se generan localmente)
+media/
+staticfiles/
+
+# =====================================
+# Node / React (Vite o CRA)
+# =====================================
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+
+# Archivos de entorno frontend
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# =====================================
+# IDE / Sistema Operativo
+# =====================================
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# =====================================
+# Otros
+# =====================================
+# coverage / tests
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
