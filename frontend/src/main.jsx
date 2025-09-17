@@ -1,23 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import App from "./App";
+import App from "./App.jsx";
 
-function Login() {
-  return <h2>Página de Login</h2>;
-}
-function Register() {
-  return <h2>Página de Registro</h2>;
-}
-
+// Renderiza la app dentro del <div id="root"></div> de index.html
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </BrowserRouter>
+    <App />
   </React.StrictMode>
 );
