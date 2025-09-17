@@ -11,6 +11,8 @@ import DashboardAdmin from "./pages/DashboardAdmin";
 import DashboardEmpleado from "./pages/DashboardEmpleado";
 import DashboardCliente from "./pages/DashboardCliente"; 
 import Perfil from "./pages/Perfil";
+import Productos from "./pages/Productos";
+import Categorias from "./pages/Categorias";
 
 function App() {
   // Estado para usuario (en producción usaremos JWT/localStorage)
@@ -48,7 +50,7 @@ function App() {
   return (
     <Router>
       <Routes>
-      {/* Página inicial pública */}
+        {/* Página inicial pública */}
         <Route path="/" element={<Home />} />
 
         {/* Páginas públicas */}
@@ -68,10 +70,16 @@ function App() {
           <Route path="/cliente" element={<DashboardCliente onLogout={handleLogout} />} />
         )}
 
-        {/* Perfil (para todos los usuarios logueados) */}
-        {user && (
-          <Route path="/perfil" element={<Perfil />} />
+        {/* Gestión de categorías y productos */}
+        {user && (user.rol === "administrador" || user.rol === "empleado") && (
+          <>
+            <Route path="/categorias" element={<Categorias />} />
+            <Route path="/productos" element={<Productos />} />
+          </>
         )}
+
+        {/* Perfil (para todos los usuarios logueados) */}
+        {user && <Route path="/perfil" element={<Perfil />} />}
 
         {/* Redirección automática */}
         {user ? (

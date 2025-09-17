@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'users',
+    'productos',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,3 +142,6 @@ CORS_ALLOWED_ORIGINS = [
 # o para desarrollo temporal: CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "users.Usuario"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
