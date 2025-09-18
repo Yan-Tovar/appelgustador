@@ -10,37 +10,38 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import DashboardLayout from "./components/layout/DashboardLayout"; // ojo: carpeta singular
+import DashboardLayout from "./components/layout/DashboardLayout";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import DashboardEmpleado from "./pages/DashboardEmpleado";
 import DashboardCliente from "./pages/DashboardCliente";
 import Perfil from "./pages/Perfil";
 import Productos from "./pages/admin/Productos";
 import Categorias from "./pages/admin/Categorias";
+import api from "./api";
 
 function App() {
-  // 🎨 Tema global de Material UI
+  // Tema global de Material UI
   const theme = createTheme({
     palette: {
       mode: "light",
-      primary: { main: "#1976d2" }, // azul
-      secondary: { main: "#9c27b0" }, // púrpura
+      primary: { main: "#1976d2" },
+      secondary: { main: "#9c27b0" },
     },
   });
 
-  // 👤 Estado global del usuario
+  // Estado global del usuario
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  // 🔑 Login
+  // Login
   const handleLogin = (userData) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  // 🚪 Logout
+  // Logout
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("access");
@@ -48,14 +49,12 @@ function App() {
     localStorage.removeItem("user");
   };
 
-  // 🔄 Validar sesión activa con token
+  // Validar sesión activa con token
   useEffect(() => {
     const token = localStorage.getItem("access");
     if (token) {
-      axios
-        .get("http://127.0.0.1:8000/api/users/me/", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      api
+        .get("/users/me/") // ya tiene el interceptor
         .then((res) => setUser(res.data))
         .catch(() => localStorage.clear());
     }
