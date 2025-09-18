@@ -1,5 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Typography,
+  Alert,
+} from "@mui/material";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -40,97 +50,163 @@ const Register = () => {
       setSuccess("Usuario registrado exitosamente");
       console.log(response.data);
     } catch (error) {
-        console.error(" Error completo:", error);
-
-        if (error.response) {
-          console.error("Error response data:", error.response.data);
-          setErrors(error.response.data);
-        } else {
-          setErrors({ general: "Error en el servidor" });
-        }
+      console.error("Error completo:", error);
+      if (error.response) {
+        setErrors(error.response.data);
+      } else {
+        setErrors({ general: "Error en el servidor" });
       }
+    }
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Nombre de usuario"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        {errors.username && <p>{errors.username}</p>}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #EB2A05 30%, #ffffff 100%)",
+        position: "relative",
+        overflow: "hidden",
+        px: 2,
+      }}
+    >
+      <Card sx={{ maxWidth: 800, width: "100%", borderRadius: 3, boxShadow: 3 }}>
+        <CardContent>
+          <Typography variant="h5" gutterBottom align="center">
+            Registro de Usuario
+          </Typography>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo electrónico"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        {errors.email && <p>{errors.email}</p>}
+          {success && <Alert severity="success">{success}</Alert>}
+          {errors.general && <Alert severity="error">{errors.general}</Alert>}
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        {errors.password && <p>{errors.password}</p>}
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              {/* Sección 1: Cuenta */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Información de la cuenta
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Nombre de usuario"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  error={!!errors.username}
+                  helperText={errors.username}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  type="email"
+                  label="Correo electrónico"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  type="password"
+                  label="Contraseña"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={!!errors.password}
+                  helperText={errors.password}
+                  required
+                />
+              </Grid>
 
-        <input
-          type="text"
-          name="first_name"
-          placeholder="Nombre"
-          value={formData.first_name}
-          onChange={handleChange}
-          required
-        />
-        {errors.first_name && <p>{errors.first_name}</p>}
+              {/* Sección 2: Datos personales */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" color="text.secondary" mt={2}>
+                  Datos personales
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Nombre"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  error={!!errors.first_name}
+                  helperText={errors.first_name}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Apellido"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  error={!!errors.last_name}
+                  helperText={errors.last_name}
+                  required
+                />
+              </Grid>
 
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Apellido"
-          value={formData.last_name}
-          onChange={handleChange}
-          required
-        />
-        {errors.last_name && <p>{errors.last_name}</p>}
+              {/* Sección 3: Contacto */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" color="text.secondary" mt={2}>
+                  Información de contacto
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Dirección"
+                  name="direccion"
+                  value={formData.direccion}
+                  onChange={handleChange}
+                  error={!!errors.direccion}
+                  helperText={errors.direccion}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Teléfono"
+                  name="telefono"
+                  value={formData.telefono}
+                  onChange={handleChange}
+                  error={!!errors.telefono}
+                  helperText={errors.telefono}
+                  required
+                />
+              </Grid>
 
-        <input
-          type="text"
-          name="direccion"
-          placeholder="Dirección"
-          value={formData.direccion}
-          onChange={handleChange}
-          required
-        />
-        {errors.direccion && <p>{errors.direccion}</p>}
-
-        <input
-          type="text"
-          name="telefono"
-          placeholder="Teléfono"
-          value={formData.telefono}
-          onChange={handleChange}
-          required
-        />
-        {errors.telefono && <p>{errors.telefono}</p>}
-
-        <button type="submit">Registrarse</button>
-      </form>
-
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      {errors.general && <p style={{ color: "red" }}>{errors.general}</p>}
-    </div>
+              {/* Botón */}
+              <Grid item xs={12} mt={2}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{ py: 1.2, borderRadius: 2 }}
+                >
+                  Registrarse
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 
