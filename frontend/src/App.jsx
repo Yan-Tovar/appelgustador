@@ -28,16 +28,14 @@ import DashboardCliente from "./pages/DashboardCliente";
 import Perfil from "./pages/Perfil";
 import Productos from "./pages/admin/Productos";
 import Categorias from "./pages/admin/Categorias";
-// Importa todas las vistas que se renderizan según la ruta.
-// Algunas están dentro de layouts, otras son independientes.
 
 function App() {
   // Tema global de Material UI
   const theme = createTheme({
     palette: {
       mode: "light",
-      primary: { main: "#1976d2" }, // azul
-      secondary: { main: "#9c27b0" }, // púrpura
+      primary: { main: "#1976d2" },
+      secondary: { main: "#9c27b0" },
     },
   });
 
@@ -65,10 +63,8 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("access");
     if (token) {
-      axios
-        .get("http://127.0.0.1:8000/api/users/me/", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      api
+        .get("/users/me/") // ya tiene el interceptor
         .then((res) => setUser(res.data))
         .catch(() => localStorage.clear());
     }

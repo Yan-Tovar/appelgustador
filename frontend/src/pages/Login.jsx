@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../api";
 import {
   Container,
   Box,
@@ -23,7 +24,7 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/token/", {
+      const res = await api.post("/token/", {
         email,
         password,
       });
@@ -31,9 +32,7 @@ export default function Login({ onLogin }) {
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
 
-      const userRes = await axios.get("http://127.0.0.1:8000/api/users/me/", {
-        headers: { Authorization: `Bearer ${res.data.access}` },
-      });
+      const userRes = await api.get("/users/me/");
 
       onLogin(userRes.data);
       localStorage.setItem("user", JSON.stringify(userRes.data));
