@@ -1,5 +1,10 @@
 import { Outlet, useNavigate } from "react-router-dom";
+// 'Outlet' renderiza las rutas hijas dentro del layout.
+// 'useNavigate' permite redirigir programáticamente entre rutas.
+
 import { useState } from "react";
+// Hook para manejar estados locales como el modo oscuro o la apertura del drawer.
+
 import {
   Box,
   CssBaseline,
@@ -22,6 +27,8 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+// Componentes de Material UI para construir la interfaz visual del dashboard.
+
 import {
   Menu as MenuIcon,
   Home as HomeIcon,
@@ -34,21 +41,22 @@ import {
   Category as CategoryIcon,
   Logout as LogoutIcon,
 } from "@mui/icons-material";
+// Íconos usados en el menú lateral y en la barra superior.
 
 export default function DashboardLayout({ onLogout }) {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false); // Modo oscuro activado/desactivado
+  const [open, setOpen] = useState(false); // Drawer abierto en móviles
+  const [confirmOpen, setConfirmOpen] = useState(false); // Diálogo de confirmación de logout
 
-  const isMobile = useMediaQuery("(max-width:600px)");
-  const drawerWidth = 240;
+  const isMobile = useMediaQuery("(max-width:600px)"); // Detecta si el dispositivo es móvil
+  const drawerWidth = 240; // Ancho del menú lateral
 
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
-      primary: { main: "#EB2A05" },
-      secondary: { main: "#2e7d32" },
+      primary: { main: "#EB2A05" }, // Color principal (rojo)
+      secondary: { main: "#2e7d32" }, // Color secundario (verde)
     },
   });
 
@@ -58,6 +66,7 @@ export default function DashboardLayout({ onLogout }) {
     { text: "Productos", icon: <InventoryIcon />, path: "/admin/productos" },
     { text: "Perfil", icon: <AccountCircleRounded />, path: "/admin/perfil" },
   ];
+  //Lista de secciones disponibles en el panel, con íconos y rutas asociadas.
 
   // Drawer reutilizable
   const drawerContent = (
@@ -79,20 +88,20 @@ export default function DashboardLayout({ onLogout }) {
       ))}
     </List>
   );
+  // Renderiza los ítems del menú lateral.
+  // Cierra el drawer automáticamente en móviles al hacer clic.
 
   const handleOpenLogoutConfirm = () => {
-    // Reproduce sonido de notificación
     const audio = new Audio("/logout.mp3"); // debe estar en /public
-    audio.play();
-
-    // Abre el dialogo de confirmación
-    setConfirmOpen(true);
+    audio.play(); // Reproduce sonido de cierre de sesión
+    setConfirmOpen(true); // Abre el diálogo de confirmación
   };
 
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {/*Aplica el tema visual y normaliza los estilos base. */}
 
       {/* Barra superior */}
       <AppBar
