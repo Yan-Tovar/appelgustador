@@ -1,25 +1,38 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+// 'Router' envuelve toda la app para habilitar navegación por rutas.
+// 'Routes' contiene todas las rutas definidas.
+// 'Route' define cada ruta individual.
+// 'Navigate' permite redireccionar programáticamente.
+
 import { useState, useEffect } from "react";
+// Hooks para manejar estado local y efectos secundarios (como validar sesión).
+
 import axios from "axios";
+// Cliente HTTP para hacer peticiones al backend (por ejemplo, validar token).
 
 // Imports de Material UI
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+// 'ThemeProvider' aplica un tema global.
+// 'createTheme' permite definir colores y modo.
+// 'CssBaseline' normaliza estilos base en todos los navegadores.
 
 // Importar las páginas desde /pages
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import DashboardLayout from "./components/layout/DashboardLayout"; // ojo: carpeta singular
+import DashboardLayout from "./components/layout/DashboardLayout";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import DashboardEmpleado from "./pages/DashboardEmpleado";
 import DashboardCliente from "./pages/DashboardCliente";
 import Perfil from "./pages/Perfil";
 import Productos from "./pages/admin/Productos";
 import Categorias from "./pages/admin/Categorias";
+// Importa todas las vistas que se renderizan según la ruta.
+// Algunas están dentro de layouts, otras son independientes.
 
 function App() {
-  // 🎨 Tema global de Material UI
+  // Tema global de Material UI
   const theme = createTheme({
     palette: {
       mode: "light",
@@ -28,19 +41,19 @@ function App() {
     },
   });
 
-  // 👤 Estado global del usuario
+  // Estado global del usuario
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  // 🔑 Login
+  // Login
   const handleLogin = (userData) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  // 🚪 Logout
+  // Logout
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("access");
@@ -48,7 +61,7 @@ function App() {
     localStorage.removeItem("user");
   };
 
-  // 🔄 Validar sesión activa con token
+  // Validar sesión activa con token
   useEffect(() => {
     const token = localStorage.getItem("access");
     if (token) {
