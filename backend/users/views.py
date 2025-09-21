@@ -1,6 +1,11 @@
 # Este archivo define las vistas para registrar nuevos usuarios y consultar o actualizar el perfil del usuario autenticado.
 # Usa vistas basadas en clases (Class-Based Views) de Django REST Framework.
 
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import send_mail
+
 from rest_framework import generics, permissions
 # 'generics' proporciona vistas base para operaciones comunes como CreateAPIView.
 # 'permissions' permite aplicar reglas de acceso (como autenticación).
@@ -25,6 +30,55 @@ from rest_framework import status
 
 from .serializers import PerfilUsuarioSerializer
 # Importa el serializer que se usa para consultar y actualizar el perfil del usuario.
+
+token_generator = PasswordResetTokenGenerator()
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response({"error": "El email es obligatorio"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = Usuario.objects.get(email=email)
+        except Usuario.DoesNotExist:
+            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = token_generator.make_token(user)
+
+        reset_link = f"http://localhost:5173/reset-password/{uid}/{token}"
+
+        # Enviar correo (usa tu config SMTP en settings.py)
+        send_mail(
+            subject="Recuperación de contraseña",
+            message=f"Usa este link para resetear tu contraseña: {reset_link}",
+            from_email="no-reply@tusitio.com",
+            recipient_list=[email],
+        )
+
+        return Response({"message": "Se envió el link de recuperación al correo"}, status=status.HTTP_200_OK)
+
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = Usuario.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, Usuario.DoesNotExist):
+            return Response({"error": "Token inválido"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not token_generator.check_token(user, token):
+            return Response({"error": "Token inválido o expirado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        new_password = request.data.get("password")
+        if not new_password:
+            return Response({"error": "Debes ingresar la nueva contraseña"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({"message": "Contraseña restablecida exitosamente"}, status=status.HTTP_200_OK)
 
 # Registro
 class RegisterView(generics.CreateAPIView):

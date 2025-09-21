@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 # - TokenObtainPairView: para obtener access y refresh tokens.
 # - TokenRefreshView: para refrescar el access token usando el refresh token.
 
-from .views import RegisterView, PerfilView
+from .views import RegisterView, PerfilView, PasswordResetRequestView, PasswordResetConfirmView
 # Importa las vistas personalizadas:
 # - RegisterView: para registrar nuevos usuarios.
 # - PerfilView: para consultar o actualizar el perfil del usuario autenticado.
@@ -33,6 +33,9 @@ urlpatterns = [
     # Ruta para consultar o actualizar el perfil del usuario autenticado.
     # Se conecta con la vista PerfilView, que usa el serializer PerfilUsuarioSerializer.
     # El frontend puede hacer GET para ver los datos o PUT/PATCH para actualizarlos.
+
+    path("reset-password-request/", PasswordResetRequestView.as_view(), name="password_reset_request"),
+    path("reset-password/<uidb64>/<token>/", PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
 ]
 
 # ¿Cómo se usa en el flujo?

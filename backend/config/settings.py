@@ -137,3 +137,9 @@ CORS_ALLOWED_ORIGINS = [
 AUTH_USER_MODEL = "users.Usuario"
 # Define el modelo de usuario personalizado que estás usando en tu app 'users'.
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "yantovar2007@gmail.com"
+EMAIL_HOST_PASSWORD = "akbd aqft pwfb dawb"

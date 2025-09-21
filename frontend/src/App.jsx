@@ -18,9 +18,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 // 'CssBaseline' normaliza estilos base en todos los navegadores.
 
 // Importar las páginas desde /pages
+import api from "./services/api";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import DashboardEmpleado from "./pages/DashboardEmpleado";
@@ -64,7 +67,7 @@ function App() {
     const token = localStorage.getItem("access");
     if (token) {
       api
-        .get("/users/me/") // ya tiene el interceptor
+        .get("/users/me/") 
         .then((res) => setUser(res.data))
         .catch(() => localStorage.clear());
     }
@@ -81,6 +84,10 @@ function App() {
           {/* Páginas públicas */}
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register onRegister={handleLogin} />} />
+
+          {/* Rutas para el cambio de Contraseña */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
 
           {/* --- Rutas protegidas --- */}
           {user && user.rol === "administrador" && (

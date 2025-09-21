@@ -8,7 +8,13 @@ import {
   Grid,
   Paper,
   CircularProgress,
+  Chip
 } from "@mui/material";
+
+import {
+  Face as FaceIcon,
+
+} from "@mui/icons-material";
 
 export default function Perfil() {
   const [perfil, setPerfil] = useState(null);
@@ -147,9 +153,9 @@ export default function Perfil() {
         </Grid>
 
         <Box mt={2}>
-          <Typography variant="body1">
-            <strong>Rol:</strong> {perfil.rol}
-          </Typography>
+          {perfil?.rol && (
+            <Chip icon={<FaceIcon />} label={perfil.rol}/>
+          )}
         </Box>
 
         <Box mt={3} display="flex" justifyContent="flex-end">

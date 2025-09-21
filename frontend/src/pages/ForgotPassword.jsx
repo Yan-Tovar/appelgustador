@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import api from "../services/api";
 import {
   Container,
   Box,
@@ -15,35 +13,21 @@ import {
   Fade,
 } from "@mui/material";
 
-export default function Login({ onLogin }) {
+export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
     setError("");
+
     try {
-      const res = await api.post("/token/", {
-        email,
-        password,
-      });
-
-      localStorage.setItem("access", res.data.access);
-      localStorage.setItem("refresh", res.data.refresh);
-
-      const userRes = await api.get("/users/me/");
-
-      onLogin(userRes.data);
-      localStorage.setItem("user", JSON.stringify(userRes.data));
-
-      if (userRes.data.rol === "administrador") navigate("/admin");
-      else if (userRes.data.rol === "empleado") navigate("/empleado");
-      else navigate("/cliente");
+      const res = await axios.post("http://127.0.0.1:8000/api/users/reset-password-request/", { email });
+      setMessage(res.data.message);
     } catch (err) {
-      console.error("Error login:", err);
-      setError("Correo o contraseña incorrectos");
+      setError(err.response?.data?.error || "Error al enviar solicitud");
     }
   };
 
@@ -60,9 +44,7 @@ export default function Login({ onLogin }) {
         px: 2,
       }}
     >
-      {/* Tarjeta con fade */}
-      <Fade in={true} timeout={800}>
-        <Container maxWidth="xs">
+      <Container maxWidth="xs">
           <Card
             elevation={10}
             sx={{
@@ -83,7 +65,7 @@ export default function Login({ onLogin }) {
                   textShadow: "1px 1px 6px rgba(0,0,0,0.3)",
                 }}
               >
-                Bienvenido
+                Recuperar Contraseña
               </Typography>
               <Typography
                 variant="body2"
@@ -91,16 +73,19 @@ export default function Login({ onLogin }) {
                 gutterBottom
                 sx={{ color: "text.secondary", mb: 3 }}
               >
-                Inicia sesión para continuar
+                Correo Electrónico
               </Typography>
-
               {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                   {error}
                 </Alert>
               )}
-
-              <form onSubmit={handleLogin}>
+              {message && (
+                <Alert severity="message" sx={{ mb: 2, color: "#a7a41bff" }}>
+                  {message}
+                </Alert>
+              )}
+              <form onSubmit={handleSubmit}>
                 <TextField
                   label="Correo electrónico"
                   type="email"
@@ -110,17 +95,6 @@ export default function Login({ onLogin }) {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-
-                <TextField
-                  label="Contraseña"
-                  type="password"
-                  fullWidth
-                  margin="normal"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-
                 <Button
                   type="submit"
                   variant="contained"
@@ -137,24 +111,12 @@ export default function Login({ onLogin }) {
                     },
                   }}
                 >
-                  Ingresar
+                  Enviar Enlace
                 </Button>
               </form>
-              <br />
-                <Link to="/forgot-password">
-                  <Typography
-                    variant="body2"
-                    align="center"
-                    gutterBottom
-                    sx={{ color: "#0e37eeff", mb: 3 }}
-                  >
-                    ¿Olvidaste tu Contraseña?
-                </Typography>
-              </Link>
-            </CardContent>
-          </Card>
-        </Container>
-      </Fade>
+          </CardContent>
+        </Card>
+      </Container>
     </Box>
   );
 }
