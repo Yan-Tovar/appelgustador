@@ -31,6 +31,7 @@ import DashboardCliente from "./pages/DashboardCliente";
 import Perfil from "./pages/Perfil";
 import Productos from "./pages/admin/Productos";
 import Categorias from "./pages/admin/Categorias";
+import GestionUsuarios from "./pages/admin/GestionUsuarios";
 
 function App() {
   // Tema global de Material UI
@@ -97,6 +98,7 @@ function App() {
               <Route path="productos" element={<Productos />} />
               <Route path="categorias" element={<Categorias />} />
               <Route path="perfil" element={<Perfil />} />
+              <Route path="gestionusuarios" element={<GestionUsuarios />} />
             </Route>
           )}
 

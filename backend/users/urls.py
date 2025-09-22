@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 # - TokenObtainPairView: para obtener access y refresh tokens.
 # - TokenRefreshView: para refrescar el access token usando el refresh token.
 
-from .views import RegisterView, PerfilView, PasswordResetRequestView, PasswordResetConfirmView
+from .views import RegisterView, PerfilView, PasswordResetRequestView, PasswordResetConfirmView, UsersListCreateView, UsersRetrieveUpdateDestroyView
 # Importa las vistas personalizadas:
 # - RegisterView: para registrar nuevos usuarios.
 # - PerfilView: para consultar o actualizar el perfil del usuario autenticado.
@@ -36,6 +36,15 @@ urlpatterns = [
 
     path("reset-password-request/", PasswordResetRequestView.as_view(), name="password_reset_request"),
     path("reset-password/<uidb64>/<token>/", PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+    
+    # Gestion Usuarios
+    path('gestionusuarios/', UsersListCreateView.as_view(), name='users-list-create'),
+    # Ruta para listar todas los usuarios (GET) 
+    # Se conecta con la vista 'UsersListCreateView'.
+
+    path('gestionusuarios/<int:pk>/', UsersRetrieveUpdateDestroyView.as_view(), name='user-detail'),
+    # Ruta para obtener (GET), actualizar (PUT/PATCH) usuario específico por su ID (pk).
+    # Se conecta con la vista 'UserRetrieveUpdateDestroyView'.
 ]
 
 # ¿Cómo se usa en el flujo?

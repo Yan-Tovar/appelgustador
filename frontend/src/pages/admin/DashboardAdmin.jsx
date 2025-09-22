@@ -111,6 +111,37 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Card sx={{ borderRadius: 3 }}>
+            {/* Imagen */}
+            <CardMedia
+              component="img"
+              image="/gestionUsuarios.png"
+              alt="Imagen Usuarios"
+              sx={{
+                height: 180,         
+                objectFit: "contain", 
+                p: 2,                 
+                width: "auto",        
+                margin: "0 auto",   
+              }}
+            />
+            <CardContent>
+              <Typography variant="h6">Gestion Usuarios</Typography>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Gestiona Usuarios del sistema
+              </Typography>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => navigate("/admin/gestionusuarios")}
+              >
+                Ver Usuarios
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
     </Container>
   );

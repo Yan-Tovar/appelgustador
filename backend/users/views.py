@@ -28,8 +28,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 # Proporciona códigos de estado HTTP como 200, 400, 401, etc.
 
-from .serializers import PerfilUsuarioSerializer
+from .serializers import PerfilUsuarioSerializer, UsuarioSerializer
 # Importa el serializer que se usa para consultar y actualizar el perfil del usuario.
+
+# Permisos personalizados
+class IsAdmin(permissions.BasePermission):
+    # Define un permiso personalizado que solo permite acceso a usuarios autenticados con rol 'administrador'.
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.rol in ['administrador']
+        # Verifica que el usuario esté autenticado y que su rol esté en la lista permitida.
+        # Si no cumple, se bloquea el acceso a la vista.
 
 token_generator = PasswordResetTokenGenerator()
 
@@ -135,6 +144,27 @@ class PerfilView(APIView):
             return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Gestion Usuarios
+class UsersListCreateView(generics.ListCreateAPIView):
+    # Vista que permite listar todas los usuarios (GET).
+
+    queryset = Usuario.objects.all()
+    # Define el conjunto de datos que se va a consultar: todos los usuarios.
+
+    serializer_class = UsuarioSerializer
+    # Usa el serializer para transformar los datos del modelo en JSON y viceversa.
+
+    permission_classes = [IsAdmin]
+    # Aplica el permiso personalizado: solo administradores pueden acceder.
+
+class UsersRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    # Vista que permite obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) un usuario específico.
+
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+    permission_classes = [IsAdmin]
+    # Igual que la vista anterior, pero aplicada a un usuario individual (por ID).
     
 # ¿Cómo se usa el flujo?
 

@@ -95,6 +95,27 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
         # Devuelve el nuevo usuario creado.
 
+class UsuarioSerializer(serializers.ModelSerializer):
+    # Define un serializer automático para el modelo Usuario.
+    # ModelSerializer crea los campos automáticamente basándose en el modelo.
+
+    class Meta:
+        model = Usuario
+        # Indica que este serializer se basa en el modelo Usuario.
+
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "direccion",
+            "telefono",
+            "rol",
+        ]
+        # Incluye todos los campos del modelo en el serializer.
+        # Esto permite enviar y recibir todos los datos de un usuario (nombre, imagen, estado, etc.).
+
 # ¿Cómo se usa en el flujo?
 
     # El frontend envía una petición POST /api/users/register/ → se usa RegisterSerializer.
