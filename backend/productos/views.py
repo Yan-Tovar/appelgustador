@@ -44,6 +44,13 @@ class CategoriaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrEmpleado]
     # Igual que la vista anterior, pero aplicada a una categoría individual (por ID).
 
+class ProductosDisponiblesView(generics.ListAPIView):
+    serializer_class = ProductoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Producto.objects.filter(estado="activo")
+
 # CRUD Productos
 class ProductoListCreateView(generics.ListCreateAPIView):
     # Vista que permite listar todos los productos (GET) y crear uno nuevo (POST).

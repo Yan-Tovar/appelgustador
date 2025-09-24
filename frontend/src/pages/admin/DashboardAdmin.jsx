@@ -9,7 +9,7 @@ import {
   Container,
 } from "@mui/material";
 
-export default function AdminDashboard() {
+export default function DashboardAdmin() {
   const navigate = useNavigate();
 
   return (

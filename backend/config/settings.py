@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'rest_framework',                  # Framework para construir APIs REST.
     'users',                           # App personalizada para gestión de usuarios.
     'productos',                       # App personalizada para productos.
+    'cart',                            # App personalizada para Carrito.
     'django.contrib.admin',           # Panel de administración.
     'django.contrib.auth',            # Sistema de autenticación.
     'django.contrib.contenttypes',    # Manejo de tipos de contenido.

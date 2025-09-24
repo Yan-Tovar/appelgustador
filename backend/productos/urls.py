@@ -9,7 +9,8 @@ from .views import (
     CategoriaListCreateView,
     CategoriaRetrieveUpdateDestroyView,
     ProductoListCreateView,
-    ProductoRetrieveUpdateDestroyView
+    ProductoRetrieveUpdateDestroyView,
+    ProductosDisponiblesView
 )
 # Importa las vistas que manejarán las operaciones CRUD para categorías y productos.
 # Estas vistas están basadas en clases (Class-Based Views) y usan DRF para responder con JSON.
@@ -32,6 +33,9 @@ urlpatterns = [
     path('productos/<int:pk>/', ProductoRetrieveUpdateDestroyView.as_view(), name='producto-detail'),
     # Ruta para obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) un producto específico por su ID.
     # Se conecta con la vista 'ProductoRetrieveUpdateDestroyView'.
+
+    path("disponibles/", ProductosDisponiblesView.as_view(), name="productos-disponibles"),
+    #Ruta para obtener el listado de productos solamente disponibles para el flujo de compra
 ]
 
 # Flujo de datos

@@ -24,14 +24,17 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import DashboardLayout from "./components/layout/DashboardLayout";
+import DashboardAdminLayout from "./components/layout/DashboardAdminLayout";
+import DashboardClienteLayout from "./components/layout/DashboardClienteLayout";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import DashboardEmpleado from "./pages/DashboardEmpleado";
-import DashboardCliente from "./pages/DashboardCliente";
+import DashboardCliente from "./pages/cliente/DashboardCliente";
 import Perfil from "./pages/Perfil";
 import Productos from "./pages/admin/Productos";
 import Categorias from "./pages/admin/Categorias";
 import GestionUsuarios from "./pages/admin/GestionUsuarios";
+import CartPage from "./pages/cart/CartPage";
+import ProductosDisponibles from "./pages/cliente/ProductosDisponibles";
 
 function App() {
   // Tema global de Material UI
@@ -92,7 +95,7 @@ function App() {
 
           {/* --- Rutas protegidas --- */}
           {user && user.rol === "administrador" && (
-            <Route path="/admin" element={<DashboardLayout onLogout={handleLogout} />}>
+            <Route path="/admin" element={<DashboardAdminLayout onLogout={handleLogout} />}>
               {/* aquí van las vistas hijas dentro del layout */}
               <Route index element={<DashboardAdmin />} />
               <Route path="productos" element={<Productos />} />
@@ -107,7 +110,12 @@ function App() {
           )}
 
           {user && user.rol === "cliente" && (
-            <Route path="/cliente" element={<DashboardCliente onLogout={handleLogout} />} />
+            <Route path="/cliente" element={<DashboardClienteLayout onLogout={handleLogout} />}>
+              {/* aquí van las vistas hijas dentro del layout */}
+              <Route index element={<DashboardCliente />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="productos-disponibles" element={<ProductosDisponibles />} />
+            </Route>
           )}
 
           {/* Redirecciones por rol */}

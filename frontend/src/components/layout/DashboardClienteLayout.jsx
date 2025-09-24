@@ -43,7 +43,7 @@ import {
 } from "@mui/icons-material";
 // Íconos usados en el menú lateral y en la barra superior.
 
-export default function DashboardLayout({ onLogout }) {
+export default function DashboardClienteLayout({ onLogout }) {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false); // Modo oscuro activado/desactivado
   const [open, setOpen] = useState(false); // Drawer abierto en móviles
@@ -61,11 +61,9 @@ export default function DashboardLayout({ onLogout }) {
   });
 
   const menuItems = [
-    { text: "Inicio", icon: <HomeIcon />, path: "/admin" },
-    { text: "Categorias", icon: <CategoryIcon />, path: "/admin/categorias" },
-    { text: "Productos", icon: <InventoryIcon />, path: "/admin/productos" },
-    { text: "Perfil", icon: <AccountCircleRounded />, path: "/admin/perfil" },
-    { text: "Gestión Usuarios", icon: <PeopleIcon />, path: "/admin/gestionusuarios" },
+    { text: "Inicio", icon: <HomeIcon />, path: "/cliente" },
+    { text: "Carrito", icon: <CategoryIcon />, path: "/cliente/cart" },
+    { text: "Productos", icon: <CategoryIcon />, path: "/cliente/productos-disponibles" },
   ];
   //Lista de secciones disponibles en el panel, con íconos y rutas asociadas.
 
@@ -125,7 +123,7 @@ export default function DashboardLayout({ onLogout }) {
             </IconButton>
           )}
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Panel Administrador
+            Panel Cliente
           </Typography>
 
           {/* Botón Modo Oscuro */}

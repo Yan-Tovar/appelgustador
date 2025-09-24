@@ -38,6 +38,9 @@ urlpatterns = [
 
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # Endpoint para refrescar el access token usando el refresh token. Evita que el usuario tenga que iniciar sesión de nuevo.
+
+    path("api/cart/", include("cart.urls")),
+    #Incluye las rutas de la app Carrito. Aquí podrían estar los endpoint como /api/cart/add/...
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
