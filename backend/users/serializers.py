@@ -101,18 +101,22 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        # Indica que este serializer se basa en el modelo Usuario.
+        fields = ["id", "email", "first_name", "last_name", "rol"]
 
-        fields = [
-            "id",
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "direccion",
-            "telefono",
-            "rol",
-        ]
+    def get_fields(self):
+        """
+        Dependiendo del contexto (acción de la vista),
+        se limitan los campos que se usan.
+        """
+        fields = super().get_fields()
+
+        request = self.context.get("request")
+        if request and request.method in ["PUT", "PATCH"]:
+            # Solo permitir id y rol al actualizar
+            allowed = {"id", "rol"}
+            return {key: fields[key] for key in allowed if key in fields}
+
+        return fields
         # Incluye todos los campos del modelo en el serializer.
         # Esto permite enviar y recibir todos los datos de un usuario (nombre, imagen, estado, etc.).
 

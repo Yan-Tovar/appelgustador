@@ -65,6 +65,7 @@ export default function DashboardLayout({ onLogout }) {
     { text: "Categorias", icon: <CategoryIcon />, path: "/admin/categorias" },
     { text: "Productos", icon: <InventoryIcon />, path: "/admin/productos" },
     { text: "Perfil", icon: <AccountCircleRounded />, path: "/admin/perfil" },
+    { text: "Gestión Usuarios", icon: <PeopleIcon />, path: "/admin/gestionusuarios" },
   ];
   //Lista de secciones disponibles en el panel, con íconos y rutas asociadas.
 
