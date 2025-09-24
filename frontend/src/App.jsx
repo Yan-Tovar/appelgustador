@@ -35,6 +35,7 @@ import Categorias from "./pages/admin/Categorias";
 import GestionUsuarios from "./pages/admin/GestionUsuarios";
 import CartPage from "./pages/cart/CartPage";
 import ProductosDisponibles from "./pages/cliente/ProductosDisponibles";
+import MyOrders from "./pages/cliente/MyOrders";
 
 function App() {
   // Tema global de Material UI
@@ -113,8 +114,10 @@ function App() {
             <Route path="/cliente" element={<DashboardClienteLayout onLogout={handleLogout} />}>
               {/* aquí van las vistas hijas dentro del layout */}
               <Route index element={<DashboardCliente />} />
+              <Route path="perfil" element={<Perfil />} />
               <Route path="cart" element={<CartPage />} />
               <Route path="productos-disponibles" element={<ProductosDisponibles />} />
+              <Route path="pedidos" element={<MyOrders />} />
             </Route>
           )}
 

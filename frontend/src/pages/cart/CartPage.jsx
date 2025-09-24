@@ -66,6 +66,30 @@ export default function CartPage() {
     );
   };
 
+  const handleCheckout = async () => {
+    const confirmCheckout = window.confirm(
+      "¿Estás seguro de confirmar tu carrito y generar la orden?"
+    );
+    if (!confirmCheckout) return;
+
+    try {
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/orders/create/",
+        {}, // el backend no necesita más datos porque toma el carrito del usuario
+        config
+      );
+
+      alert("¡Pedido creado con éxito!");
+      console.log("Orden creada:", res.data);
+
+      // limpiar carrito en frontend
+      setCart({ ...cart, items: [] });
+    } catch (error) {
+      console.error("Error al confirmar pedido:", error);
+      alert("No se pudo crear la orden, intenta nuevamente.");
+    }
+  };
+
   if (!cart) {
     return (
       <Box>
@@ -119,7 +143,12 @@ export default function CartPage() {
       {cart.items.length > 0 && (
         <Box sx={{ mt: 3 }}>
           <Typography variant="h6">Total: ${calcularTotal()}</Typography>
-          <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            onClick={handleCheckout}
+          >
             Proceder al Checkout
           </Button>
         </Box>

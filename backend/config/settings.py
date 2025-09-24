@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'users',                           # App personalizada para gestión de usuarios.
     'productos',                       # App personalizada para productos.
     'cart',                            # App personalizada para Carrito.
+    'order',                            # App personalizada para Pedidos.
     'django.contrib.admin',           # Panel de administración.
     'django.contrib.auth',            # Sistema de autenticación.
     'django.contrib.contenttypes',    # Manejo de tipos de contenido.

@@ -41,6 +41,9 @@ urlpatterns = [
 
     path("api/cart/", include("cart.urls")),
     #Incluye las rutas de la app Carrito. Aquí podrían estar los endpoint como /api/cart/add/...
+
+    path("api/orders/", include("order.urls")),
+    #Incluye las rutas de la app Pedidos. Aquí podrían estar los endpoint como /api/orders/create/
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

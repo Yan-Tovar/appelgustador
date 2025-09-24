@@ -32,14 +32,14 @@ import {
 import {
   Menu as MenuIcon,
   Home as HomeIcon,
-  People as PeopleIcon,
-  Inventory as InventoryIcon,
-  Settings as SettingsIcon,
   Brightness4,
   Brightness7,
   AccountCircleRounded,
   Category as CategoryIcon,
   Logout as LogoutIcon,
+  ShoppingCart as ShoppingCartIcon,
+  ShoppingBag as ShoppingBagIcon,
+  ReceiptLong as ReceiptLongIcon,
 } from "@mui/icons-material";
 // Íconos usados en el menú lateral y en la barra superior.
 
@@ -62,8 +62,10 @@ export default function DashboardClienteLayout({ onLogout }) {
 
   const menuItems = [
     { text: "Inicio", icon: <HomeIcon />, path: "/cliente" },
-    { text: "Carrito", icon: <CategoryIcon />, path: "/cliente/cart" },
-    { text: "Productos", icon: <CategoryIcon />, path: "/cliente/productos-disponibles" },
+    { text: "Carrito", icon: <ShoppingCartIcon />, path: "/cliente/cart" },
+    { text: "Productos", icon: <ShoppingBagIcon />, path: "/cliente/productos-disponibles" },
+    { text: "Pedidos", icon: <ReceiptLongIcon />, path: "/cliente/pedidos" },
+    { text: "Perfil", icon: <AccountCircleRounded />, path: "/cliente/perfil" },
   ];
   //Lista de secciones disponibles en el panel, con íconos y rutas asociadas.
 
