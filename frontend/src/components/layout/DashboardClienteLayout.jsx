@@ -1,10 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-// 'Outlet' renderiza las rutas hijas dentro del layout.
-// 'useNavigate' permite redirigir programáticamente entre rutas.
-
 import { useState } from "react";
-// Hook para manejar estados locales como el modo oscuro o la apertura del drawer.
-
 import {
   Box,
   CssBaseline,
@@ -22,13 +17,9 @@ import {
   ThemeProvider,
   Dialog,
   DialogTitle,
-  DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
 } from "@mui/material";
-// Componentes de Material UI para construir la interfaz visual del dashboard.
-
 import {
   Menu as MenuIcon,
   Home as HomeIcon,
@@ -41,7 +32,6 @@ import {
   ShoppingBag as ShoppingBagIcon,
   ReceiptLong as ReceiptLongIcon,
 } from "@mui/icons-material";
-// Íconos usados en el menú lateral y en la barra superior.
 
 export default function DashboardClienteLayout({ onLogout }) {
   const navigate = useNavigate();
@@ -67,9 +57,7 @@ export default function DashboardClienteLayout({ onLogout }) {
     { text: "Pedidos", icon: <ReceiptLongIcon />, path: "/cliente/pedidos" },
     { text: "Perfil", icon: <AccountCircleRounded />, path: "/cliente/perfil" },
   ];
-  //Lista de secciones disponibles en el panel, con íconos y rutas asociadas.
 
-  // Drawer reutilizable
   const drawerContent = (
     <List>
       {menuItems.map((item) => (
@@ -89,8 +77,6 @@ export default function DashboardClienteLayout({ onLogout }) {
       ))}
     </List>
   );
-  // Renderiza los ítems del menú lateral.
-  // Cierra el drawer automáticamente en móviles al hacer clic.
 
   const handleOpenLogoutConfirm = () => {
     const audio = new Audio("/logout.mp3"); // debe estar en /public
@@ -98,11 +84,9 @@ export default function DashboardClienteLayout({ onLogout }) {
     setConfirmOpen(true); // Abre el diálogo de confirmación
   };
 
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/*Aplica el tema visual y normaliza los estilos base. */}
 
       {/* Barra superior */}
       <AppBar
@@ -186,7 +170,7 @@ export default function DashboardClienteLayout({ onLogout }) {
           flexGrow: 1,
           p: 3,
           mt: 8,
-          ml: { md: `${drawerWidth}px` },
+          ml: { md: `${drawerWidth}px` }, // Aseguramos que el contenido no quede debajo del menú lateral
         }}
       >
         <Outlet />
@@ -197,12 +181,12 @@ export default function DashboardClienteLayout({ onLogout }) {
         <DialogTitle>¿Seguro que quieres cerrar sesión?</DialogTitle>
         <DialogActions>
           <Button onClick={() => setConfirmOpen(false)}>Cancelar</Button>
-          <Button 
+          <Button
             onClick={() => {
               localStorage.clear();
               navigate("/login");
               if (onLogout) onLogout();
-            }} 
+            }}
             color="error"
           >
             Confirmar
