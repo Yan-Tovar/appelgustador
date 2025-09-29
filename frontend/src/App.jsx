@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 // 'Route' define cada ruta individual.
 // 'Navigate' permite redireccionar programáticamente.
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 // Hooks para manejar estado local y efectos secundarios (como validar sesión).
 
 import axios from "axios";
@@ -39,13 +39,28 @@ import MyOrders from "./pages/cliente/MyOrders";
 
 function App() {
   // Tema global de Material UI
-  const theme = createTheme({
-    palette: {
-      mode: "light",
-      primary: { main: "#1976d2" },
-      secondary: { main: "#9c27b0" },
-    },
-  });
+   const [darkMode, setDarkMode] = useState(false);
+
+  // Crear tema dinámico
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: darkMode ? "dark" : "light",
+          primary: { main: "#EB2A05" }, 
+          secondary: { main: "#2e7d32" }, 
+          background: {
+            default: darkMode ? "#121212" : "#f4f4f4",
+            paper: darkMode ? "#1e1e1e" : "#ffffff",
+          },
+          text: {
+            primary: darkMode ? "#ffffff" : "#000000",
+            secondary: darkMode ? "#bbbbbb" : "#555555",
+          },
+        },
+      }),
+    [darkMode]
+  );
 
   // Estado global del usuario
   const [user, setUser] = useState(() => {
