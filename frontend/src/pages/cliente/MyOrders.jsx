@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   Divider,
+  Button,
 } from "@mui/material";
 
 export default function MyOrders() {
@@ -28,6 +29,21 @@ export default function MyOrders() {
     }
   };
 
+  const handleGenerateInvoice = async (orderId) => {
+    try {
+      const res = await axios.post(
+        `http://127.0.0.1:8000/api/invoices/facturas/${orderId}/crear/`, // 👈 ruta corregida
+        {}, // no necesitas body porque order_id ya va en la URL
+        config
+      );
+      alert(`Factura generada con éxito: #${res.data.numero_factura}`);
+    } catch (error) {
+      console.error("Error al generar factura:", error);
+      alert("No se pudo generar la factura");
+    }
+  };
+
+
   if (orders.length === 0) {
     return (
       <Box>
@@ -45,7 +61,7 @@ export default function MyOrders() {
       <Grid container spacing={3}>
         {orders.map((order) => (
           <Grid item xs={12} key={order.id}>
-            <Card>
+            <Card sx={{ borderRadius: 3 }}>
               <CardContent>
                 <Typography variant="h6">Pedido #{order.id}</Typography>
                 <Typography color="text.secondary">
@@ -66,6 +82,17 @@ export default function MyOrders() {
                     {item.producto.nombre} x {item.quantity} = ${item.subtotal}
                   </Typography>
                 ))}
+
+                <Divider sx={{ my: 2 }} />
+
+                {/* Botón de pagar → genera la factura */}
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => handleGenerateInvoice(order.id)}
+                >
+                  Pagar y Generar Factura
+                </Button>
               </CardContent>
             </Card>
           </Grid>

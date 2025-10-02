@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'productos',                       # App personalizada para productos.
     'cart',                            # App personalizada para Carrito.
     'order',                            # App personalizada para Pedidos.
+    'invoices',                       # App personalizada para las facturas.
     'django.contrib.admin',           # Panel de administración.
     'django.contrib.auth',            # Sistema de autenticación.
     'django.contrib.contenttypes',    # Manejo de tipos de contenido.
@@ -145,3 +146,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "yantovar2007@gmail.com"
 EMAIL_HOST_PASSWORD = "akbd aqft pwfb dawb"
+DEFAULT_FROM_EMAIL = "Facturación <yantovar2007@gmail.com>"

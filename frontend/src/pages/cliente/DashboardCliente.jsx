@@ -36,6 +36,13 @@ export default function DashboardCliente() {
       button: "Ver Pedidos",
     },
     {
+      title: "Facturas",
+      description: "Revisa tus facturas generadas",
+      image: "/facturas.png",
+      path: "/cliente/facturas",
+      button: "Ver Facturas",
+    },
+    {
       title: "Perfil",
       description: "Administra tu información personal",
       image: "/perfil.png",

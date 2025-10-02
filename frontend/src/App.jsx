@@ -36,6 +36,7 @@ import GestionUsuarios from "./pages/admin/GestionUsuarios";
 import CartPage from "./pages/cart/CartPage";
 import ProductosDisponibles from "./pages/cliente/ProductosDisponibles";
 import MyOrders from "./pages/cliente/MyOrders";
+import MyInvoices from "./pages/cliente/MyInvoices";
 
 function App() {
   // Tema global de Material UI
@@ -133,6 +134,7 @@ function App() {
               <Route path="cart" element={<CartPage />} />
               <Route path="productos-disponibles" element={<ProductosDisponibles />} />
               <Route path="pedidos" element={<MyOrders />} />
+              <Route path="facturas" element={<MyInvoices />} />
             </Route>
           )}
 
