@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Define la ruta base del proyecto. Se usa para construir rutas relativas (como MEDIA_ROOT o STATICFILES_DIRS).
@@ -23,6 +25,8 @@ INSTALLED_APPS = [
     'productos',                       # App personalizada para productos.
     'cart',                            # App personalizada para Carrito.
     'order',                            # App personalizada para Pedidos.
+    'invoices',                       # App personalizada para las facturas.
+    'payments',                       # App personalizada para los pagos.
     'django.contrib.admin',           # Panel de administración.
     'django.contrib.auth',            # Sistema de autenticación.
     'django.contrib.contenttypes',    # Manejo de tipos de contenido.
@@ -145,3 +149,11 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "yantovar2007@gmail.com"
 EMAIL_HOST_PASSWORD = "akbd aqft pwfb dawb"
+DEFAULT_FROM_EMAIL = "Facturación <yantovar2007@gmail.com>"
+
+load_dotenv()
+
+PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")  # Debe estar en el archivo .env en la raíz del proyecto
+PAYPAL_SECRET = os.getenv("PAYPAL_SECRET") # Debe estar en el archivo .env en la raíz del proyecto
+PAYPAL_MODE = os.getenv("PAYPAL_MODE", "sandbox")  # "live" en producción
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173") # Debe estar en el archivo .env en la raíz del proyecto

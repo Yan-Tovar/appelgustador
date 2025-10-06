@@ -19,6 +19,7 @@ import {
   DialogTitle,
   DialogActions,
   Button,
+  Divider,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -26,7 +27,6 @@ import {
   Brightness4,
   Brightness7,
   AccountCircleRounded,
-  Category as CategoryIcon,
   Logout as LogoutIcon,
   ShoppingCart as ShoppingCartIcon,
   ShoppingBag as ShoppingBagIcon,
@@ -35,18 +35,27 @@ import {
 
 export default function DashboardClienteLayout({ onLogout }) {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false); // Modo oscuro activado/desactivado
-  const [open, setOpen] = useState(false); // Drawer abierto en móviles
-  const [confirmOpen, setConfirmOpen] = useState(false); // Diálogo de confirmación de logout
+  const [darkMode, setDarkMode] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const isMobile = useMediaQuery("(max-width:600px)"); // Detecta si el dispositivo es móvil
-  const drawerWidth = 240; // Ancho del menú lateral
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const isTablet = useMediaQuery("(min-width:601px) and (max-width:960px)");
+  const drawerWidth = 240;
 
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
-      primary: { main: "#EB2A05" }, // Color principal (rojo)
-      secondary: { main: "#2e7d32" }, // Color secundario (verde)
+      primary: { main: "#EB2A05" }, // naranja
+      secondary: { main: "#2e7d32" }, // verde
+      background: {
+        default: darkMode ? "#121212" : "#f4f4f4", // fondo general
+        paper: darkMode ? "#1e1e1e" : "#ffffff",   // fondo de cards, drawers, etc
+      },
+      text: {
+        primary: darkMode ? "#ffffff" : "#000000",
+        secondary: darkMode ? "#bbbbbb" : "#555555",
+      },
     },
   });
 
@@ -59,76 +68,87 @@ export default function DashboardClienteLayout({ onLogout }) {
   ];
 
   const drawerContent = (
-    <List>
-      {menuItems.map((item) => (
-        <ListItem
-          button
-          key={item.text}
-          onClick={() => {
-            navigate(item.path);
-            if (isMobile) setOpen(false); // cerrar en móviles al navegar
-          }}
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Toolbar>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: "bold", color: theme.palette.primary.main }}
         >
-          <ListItemIcon sx={{ color: theme.palette.primary.main }}>
-            {item.icon}
-          </ListItemIcon>
-          <ListItemText primary={item.text} />
-        </ListItem>
-      ))}
-    </List>
+          Gustador
+        </Typography>
+      </Toolbar>
+      <Divider />
+      <List sx={{ flexGrow: 1 }}>
+        {menuItems.map((item) => (
+          <ListItem
+            button
+            key={item.text}
+            onClick={() => {
+              navigate(item.path);
+              if (isMobile) setOpen(false);
+            }}
+            sx={{
+              borderRadius: 2,
+              mx: 1,
+              mb: 1,
+              "&:hover": {
+                backgroundColor: theme.palette.primary.light,
+                color: "#fff",
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: theme.palette.primary.main }}>
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
 
   const handleOpenLogoutConfirm = () => {
-    const audio = new Audio("/logout.mp3"); // debe estar en /public
-    audio.play(); // Reproduce sonido de cierre de sesión
-    setConfirmOpen(true); // Abre el diálogo de confirmación
+    const audio = new Audio("/logout.mp3");
+    audio.play();
+    setConfirmOpen(true);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      {/* Barra superior */}
+      {/* AppBar fija con sombra */}
       <AppBar
         position="fixed"
         color="primary"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-          ml: { md: `${drawerWidth}px` },
+          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
         }}
       >
         <Toolbar>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              onClick={() => setOpen(true)}
-              edge="start"
-            >
+          {(isMobile || isTablet) && (
+            <IconButton color="inherit" onClick={() => setOpen(true)} edge="start">
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: "bold" }}>
             Panel Cliente
           </Typography>
 
-          {/* Botón Modo Oscuro */}
+          {/* Dark mode */}
           <IconButton color="inherit" onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
 
-          {/* Botón Logout */}
-          <IconButton
-            color="inherit"
-            onClick={handleOpenLogoutConfirm}
-            edge="end"
-          >
+          {/* Logout */}
+          <IconButton color="inherit" onClick={handleOpenLogoutConfirm} edge="end">
             <LogoutIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      {/* Drawer temporal para móviles */}
+      {/* Drawer móvil */}
       {isMobile && (
         <Drawer
           variant="temporary"
@@ -140,6 +160,8 @@ export default function DashboardClienteLayout({ onLogout }) {
             "& .MuiDrawer-paper": {
               width: drawerWidth,
               boxSizing: "border-box",
+              backgroundColor: "background.paper", // <- Igual que arriba
+              color: "text.primary",
             },
           }}
         >
@@ -147,14 +169,19 @@ export default function DashboardClienteLayout({ onLogout }) {
         </Drawer>
       )}
 
-      {/* Drawer permanente para escritorio */}
-      {!isMobile && (
+      {/* Drawer tablet (persistent) */}
+      {isTablet && (
         <Drawer
-          variant="permanent"
+          variant="persistent"
+          open={open}
+          onClose={() => setOpen(false)}
           sx={{
+            display: { xs: "none", sm: "block", md: "none" }, // solo en tablets
             "& .MuiDrawer-paper": {
               width: drawerWidth,
               boxSizing: "border-box",
+              backgroundColor: "background.paper",
+              color: "text.primary",
             },
           }}
         >
@@ -163,20 +190,40 @@ export default function DashboardClienteLayout({ onLogout }) {
         </Drawer>
       )}
 
-      {/* Contenido dinámico */}
+      {/* Drawer escritorio */}
+      {!isMobile && !isTablet && (
+        <Drawer
+          variant="permanent"
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              backgroundColor: "background.paper", 
+              color: "text.primary",               
+            },
+          }}
+        >
+          <Toolbar />
+          {drawerContent}
+        </Drawer>
+      )}
+
+      {/* Contenido */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
           mt: 8,
-          ml: { md: `${drawerWidth}px` }, // Aseguramos que el contenido no quede debajo del menú lateral
+          ml: { md: `${drawerWidth}px` },
+          minHeight: "100vh",
+          backgroundColor: theme.palette.background.default,
         }}
       >
         <Outlet />
       </Box>
 
-      {/* Confirmación de logout */}
+      {/* Confirm logout */}
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
         <DialogTitle>¿Seguro que quieres cerrar sesión?</DialogTitle>
         <DialogActions>
