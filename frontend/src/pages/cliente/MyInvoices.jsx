@@ -17,6 +17,7 @@ import {
   TableContainer,
   Paper,
 } from "@mui/material";
+import { PayPalButtons } from "@paypal/react-paypal-js"; // Importamos el botón de PayPal
 
 export default function MyInvoices() {
   const [invoices, setInvoices] = useState([]);
@@ -125,11 +126,7 @@ export default function MyInvoices() {
                 <Divider sx={{ my: 2 }} />
 
                 {/* Totales */}
-                <Box
-                  textAlign={{ xs: "left", sm: "right" }}
-                  mt={2}
-                  mb={2}
-                >
+                <Box textAlign={{ xs: "left", sm: "right" }} mt={2} mb={2}>
                   <Typography>Subtotal: ${invoice.subtotal}</Typography>
                   <Typography>Impuestos: ${invoice.impuestos}</Typography>
                   <Typography variant="h6" fontWeight="bold">
@@ -173,6 +170,68 @@ export default function MyInvoices() {
                     Enviar por correo
                   </Button>
                 </Box>
+
+                {/* Botón de pagar con PayPal */}
+                {invoice.estado === "pendiente" && (
+                  <Box mt={2}>
+                    <PayPalButtons
+                      style={{ layout: "horizontal" }}
+                      createOrder={async () => {
+                        const res = await fetch("http://127.0.0.1:8000/api/payments/paypal/create-order/", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                          },
+                          body: JSON.stringify({ invoice_id: invoice.id }),
+                        });
+
+                        const data = await res.json();
+                        console.log("Orden creada:", data);
+
+                        if (!res.ok) {
+                          alert("Error creando la orden de PayPal");
+                          throw new Error(data.error || "Error creando orden");
+                        }
+
+                        return data.id;
+                      }}
+                      onApprove={async (data, actions) => {
+                        try {
+                          const response = await fetch(
+                            `http://127.0.0.1:8000/api/payments/paypal/capture-order/${data.orderID}/`,
+                            {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                              },
+                              body: JSON.stringify({ invoice_id: invoice.id }),
+                            }
+                          );
+
+                          let result = null;
+                          try {
+                            result = await response.json();
+                          } catch {
+                            result = { error: "Respuesta vacía o inválida del servidor" };
+                          }
+
+                          console.log("Resultado captura:", result);
+
+                          if (!response.ok) {
+                            throw new Error(result.error || "Error actualizando factura");
+                          }
+
+                          alert("Pago exitoso 🎉");
+                        } catch (err) {
+                          console.error("Error procesando el pago:", err);
+                          alert("Error procesando el pago: " + err.message);
+                        }
+                      }}
+                    />
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </Grid>

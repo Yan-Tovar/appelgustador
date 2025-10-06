@@ -10,14 +10,14 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 // Cliente HTTP para hacer peticiones al backend (por ejemplo, validar token).
 
-// Imports de Material UI
+// Material UI
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-// 'ThemeProvider' aplica un tema global.
-// 'createTheme' permite definir colores y modo.
-// 'CssBaseline' normaliza estilos base en todos los navegadores.
 
-// Importar las páginas desde /pages
+// PayPal
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+
+// Páginas y layouts
 import api from "./services/api";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -48,8 +48,8 @@ function App() {
       createTheme({
         palette: {
           mode: darkMode ? "dark" : "light",
-          primary: { main: "#EB2A05" }, 
-          secondary: { main: "#2e7d32" }, 
+          primary: { main: "#EB2A05" },
+          secondary: { main: "#2e7d32" },
           background: {
             default: darkMode ? "#121212" : "#f4f4f4",
             paper: darkMode ? "#1e1e1e" : "#ffffff",
@@ -88,7 +88,7 @@ function App() {
     const token = localStorage.getItem("access");
     if (token) {
       api
-        .get("/users/me/") 
+        .get("/users/me/")
         .then((res) => setUser(res.data))
         .catch(() => localStorage.clear());
     }
@@ -97,55 +97,54 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Routes>
-          {/* Página inicial pública */}
-          <Route path="/" element={<Home />} />
+      {/* PayPalScriptProvider envuelve TODA la app */}
+      <PayPalScriptProvider options={{ "client-id": "AeeU3j2Gd6b68cD_47IIavwIIjchk9_I_3h33QBJZgBdUxGTfSIkoZiazXnwhxZJYD00EcgiVn0KRCn4" }}>
+        <Router>
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/register" element={<Register onRegister={handleLogin} />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
 
-          {/* Páginas públicas */}
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/register" element={<Register onRegister={handleLogin} />} />
+            {/* --- Admin --- */}
+            {user && user.rol === "administrador" && (
+              <Route path="/admin" element={<DashboardAdminLayout onLogout={handleLogout} />}>
+                <Route index element={<DashboardAdmin />} />
+                <Route path="productos" element={<Productos />} />
+                <Route path="categorias" element={<Categorias />} />
+                <Route path="perfil" element={<Perfil />} />
+                <Route path="gestionusuarios" element={<GestionUsuarios />} />
+              </Route>
+            )}
 
-          {/* Rutas para el cambio de Contraseña */}
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+            {/* --- Empleado --- */}
+            {user && user.rol === "empleado" && (
+              <Route path="/empleado" element={<DashboardEmpleado onLogout={handleLogout} />} />
+            )}
 
-          {/* --- Rutas protegidas --- */}
-          {user && user.rol === "administrador" && (
-            <Route path="/admin" element={<DashboardAdminLayout onLogout={handleLogout} />}>
-              {/* aquí van las vistas hijas dentro del layout */}
-              <Route index element={<DashboardAdmin />} />
-              <Route path="productos" element={<Productos />} />
-              <Route path="categorias" element={<Categorias />} />
-              <Route path="perfil" element={<Perfil />} />
-              <Route path="gestionusuarios" element={<GestionUsuarios />} />
-            </Route>
-          )}
+            {/* --- Cliente --- */}
+            {user && user.rol === "cliente" && (
+              <Route path="/cliente" element={<DashboardClienteLayout onLogout={handleLogout} />}>
+                <Route index element={<DashboardCliente />} />
+                <Route path="perfil" element={<Perfil />} />
+                <Route path="cart" element={<CartPage />} />
+                <Route path="productos-disponibles" element={<ProductosDisponibles />} />
+                <Route path="pedidos" element={<MyOrders />} />
+                <Route path="facturas" element={<MyInvoices />} />
+              </Route>
+            )}
 
-          {user && user.rol === "empleado" && (
-            <Route path="/empleado" element={<DashboardEmpleado onLogout={handleLogout} />} />
-          )}
-
-          {user && user.rol === "cliente" && (
-            <Route path="/cliente" element={<DashboardClienteLayout onLogout={handleLogout} />}>
-              {/* aquí van las vistas hijas dentro del layout */}
-              <Route index element={<DashboardCliente />} />
-              <Route path="perfil" element={<Perfil />} />
-              <Route path="cart" element={<CartPage />} />
-              <Route path="productos-disponibles" element={<ProductosDisponibles />} />
-              <Route path="pedidos" element={<MyOrders />} />
-              <Route path="facturas" element={<MyInvoices />} />
-            </Route>
-          )}
-
-          {/* Redirecciones por rol */}
-          {user ? (
-            <Route path="*" element={<Navigate to={`/${user.rol}`} replace />} />
-          ) : (
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          )}
-        </Routes>
-      </Router>
+            {/* Redirecciones */}
+            {user ? (
+              <Route path="*" element={<Navigate to={`/${user.rol}`} replace />} />
+            ) : (
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            )}
+          </Routes>
+        </Router>
+      </PayPalScriptProvider>
     </ThemeProvider>
   );
 }

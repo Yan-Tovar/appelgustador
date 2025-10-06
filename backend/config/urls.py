@@ -47,6 +47,9 @@ urlpatterns = [
 
     path("api/invoices/", include("invoices.urls")),
     #Incluye las rutas de la app Facturas. Aquí podrían estar los endpoint como /api/invoices/create/
+    
+    path("api/payments/", include("payments.urls")),
+    #Incluye las rutas de la app Payments. 
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
