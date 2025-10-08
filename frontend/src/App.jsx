@@ -26,12 +26,13 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import DashboardAdminLayout from "./components/layout/DashboardAdminLayout";
 import DashboardClienteLayout from "./components/layout/DashboardClienteLayout";
+import DashboardEmpleadoLayout from "./components/layout/DashboardEmpleadoLayout";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
-import DashboardEmpleado from "./pages/DashboardEmpleado";
+import DashboardEmpleado from "./pages/empleado/DashboardEmpleado";
 import DashboardCliente from "./pages/cliente/DashboardCliente";
 import Perfil from "./pages/Perfil";
-import Productos from "./pages/admin/Productos";
-import Categorias from "./pages/admin/Categorias";
+import Productos from "./pages/empleado/Productos";
+import Categorias from "./pages/empleado/Categorias";
 import GestionUsuarios from "./pages/admin/GestionUsuarios";
 import CartPage from "./pages/cart/CartPage";
 import ProductosDisponibles from "./pages/cliente/ProductosDisponibles";
@@ -112,8 +113,6 @@ function App() {
             {user && user.rol === "administrador" && (
               <Route path="/admin" element={<DashboardAdminLayout onLogout={handleLogout} />}>
                 <Route index element={<DashboardAdmin />} />
-                <Route path="productos" element={<Productos />} />
-                <Route path="categorias" element={<Categorias />} />
                 <Route path="perfil" element={<Perfil />} />
                 <Route path="gestionusuarios" element={<GestionUsuarios />} />
               </Route>
@@ -121,7 +120,12 @@ function App() {
 
             {/* --- Empleado --- */}
             {user && user.rol === "empleado" && (
-              <Route path="/empleado" element={<DashboardEmpleado onLogout={handleLogout} />} />
+              <Route path="/empleado" element={<DashboardEmpleadoLayout onLogout={handleLogout} />}> 
+                <Route index element={<DashboardEmpleado />} />
+                <Route path="perfil" element={<Perfil />} />
+                <Route path="productos" element={<Productos />} />
+                <Route path="categorias" element={<Categorias />} />
+              </Route>
             )}
 
             {/* --- Cliente --- */}
