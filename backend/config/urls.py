@@ -53,6 +53,9 @@ urlpatterns = [
 
     path('api/carrousel/', include('carrousel.urls')),
     #Incluye las rutas de la app Carrousel.
+    
+    path('api/offer/', include('offer.urls')),
+    #Incluye las rutas de la app Offer.
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

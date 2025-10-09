@@ -65,6 +65,7 @@ export default function DashboardEmpleadoLayout({ onLogout }) {
     { text: "Productos", icon: <ShoppingCartIcon />, path: "/empleado/productos" },
     { text: "Categorias", icon: <ShoppingBagIcon />, path: "/empleado/categorias" },
     { text: "Carrusel", icon: <ShoppingBagIcon />, path: "/empleado/carrusel" },
+    { text: "Ofertas", icon: <ShoppingBagIcon />, path: "/empleado/ofertas" },
     { text: "Perfil", icon: <AccountCircleRounded />, path: "/empleado/perfil" },
   ];
 
