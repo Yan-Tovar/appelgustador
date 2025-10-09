@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
@@ -13,11 +14,18 @@ import {
   Alert,
 } from "@mui/material";
 
-export default function ProductosDisponibles() {
+export default function Dashboard() {
   const [productos, setProductos] = useState([]);
   const [cantidades, setCantidades] = useState({});
   const [error, setError] = useState(null); // Para mostrar errores de la API
   const [loading, setLoading] = useState(true); // Para mostrar el estado de carga
+  const navigate = useNavigate();
+  const handleNavigate = (path) => {
+    setShowContent(false);
+    setTimeout(() => {
+      navigate(path);
+    }, 500);
+  };
 
   const token = localStorage.getItem("access");
   const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -30,8 +38,8 @@ export default function ProductosDisponibles() {
   const fetchProductosDisponibles = async () => {
     try {
       const res = await axios.get(
-        "http://127.0.0.1:8000/api/productos/disponibles/",
-        config
+        "http://127.0.0.1:8000/api/productos/dashboard/"
+
       );
       setProductos(res.data);
       setLoading(false);
@@ -50,22 +58,6 @@ export default function ProductosDisponibles() {
       ...prev,
       [productId]: cantidad,
     }));
-  };
-
-  // Manejo de agregar al carrito
-  const handleAddToCart = async (productId) => {
-    const cantidad = cantidades[productId] || 1; // Si no se digitó cantidad, usa 1
-    try {
-      await axios.post(
-        "http://127.0.0.1:8000/api/cart/add/",
-        { product_id: productId, quantity: cantidad },
-        config
-      );
-      alert("Producto agregado al carrito!");
-    } catch (error) {
-      console.error("Error al agregar al carrito:", error);
-      setError("Error al agregar el producto al carrito. Intente de nuevo.");
-    }
   };
 
   // Renderiza un mensaje de error si lo hay
@@ -129,11 +121,9 @@ export default function ProductosDisponibles() {
                 </CardContent>
                 <CardActions>
                   <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleAddToCart(prod.id)}
+                   onClick={() => handleNavigate("/home")}
                   >
-                    Agregar al Carrito
+                    Ingresa
                   </Button>
                 </CardActions>
               </Card>
