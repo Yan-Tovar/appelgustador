@@ -24,6 +24,7 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 // Páginas y layouts
 import api from "./services/api";
+import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -109,7 +110,8 @@ function App() {
         <Router>
           <Routes>
             {/* Rutas públicas */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/register" element={<Register onRegister={handleLogin} />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -138,7 +140,7 @@ function App() {
             {/* --- Cliente --- */}
             {user && user.rol === "cliente" && (
               <Route path="/cliente" element={<DashboardClienteLayout onLogout={handleLogout} />}>
-                <Route index element={<DashboardCliente />} />
+                <Route index element={<ProductosDisponibles />} />
                 <Route path="perfil" element={<Perfil />} />
                 <Route path="cart" element={<CartPage />} />
                 <Route path="productos-disponibles" element={<ProductosDisponibles />} />
