@@ -14,6 +14,11 @@ import axios from "axios";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
+// Importar los estilos del carrusel
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
 // PayPal
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
@@ -33,6 +38,7 @@ import DashboardCliente from "./pages/cliente/DashboardCliente";
 import Perfil from "./pages/Perfil";
 import Productos from "./pages/empleado/Productos";
 import Categorias from "./pages/empleado/Categorias";
+import Carrusel from "./pages/empleado/Carrusel";
 import GestionUsuarios from "./pages/admin/GestionUsuarios";
 import CartPage from "./pages/cart/CartPage";
 import ProductosDisponibles from "./pages/cliente/ProductosDisponibles";
@@ -125,6 +131,7 @@ function App() {
                 <Route path="perfil" element={<Perfil />} />
                 <Route path="productos" element={<Productos />} />
                 <Route path="categorias" element={<Categorias />} />
+                <Route path="carrusel" element={<Carrusel />} />
               </Route>
             )}
 

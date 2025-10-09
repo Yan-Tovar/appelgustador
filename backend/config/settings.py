@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'order',                            # App personalizada para Pedidos.
     'invoices',                       # App personalizada para las facturas.
     'payments',                       # App personalizada para los pagos.
+    'carrousel',                      # App personalizada para el carrusel.
     'django.contrib.admin',           # Panel de administración.
     'django.contrib.auth',            # Sistema de autenticación.
     'django.contrib.contenttypes',    # Manejo de tipos de contenido.
