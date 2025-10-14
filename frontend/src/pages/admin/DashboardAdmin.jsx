@@ -24,68 +24,6 @@ export default function DashboardAdmin() {
             {/* Imagen */}
             <CardMedia
               component="img"
-              image="/categorias.png"
-              alt="Imagen Categoría"
-              sx={{
-                height: 180,         
-                objectFit: "contain", 
-                p: 2,                 
-                width: "auto",        
-                margin: "0 auto",   
-              }}
-            />
-            <CardContent>
-              <Typography variant="h6">Categorias</Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                Gestiona Categorias de productos
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate("/admin/categorias")}
-              >
-                Ver Categorias
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Card sx={{ borderRadius: 3 }}>
-            {/* Imagen */}
-            <CardMedia
-              component="img"
-              image="/productos.png"
-              alt="Imagen Productos"
-              sx={{
-                height: 180,         
-                objectFit: "contain", 
-                p: 2,                 
-                width: "auto",        
-                margin: "0 auto",   
-              }}
-            />
-            <CardContent>
-              <Typography variant="h6">Productos</Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                Administra productos y servicios
-              </Typography>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => navigate("/admin/productos")}
-              >
-                Ver Productos
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Card sx={{ borderRadius: 3 }}>
-            {/* Imagen */}
-            <CardMedia
-              component="img"
               image="/perfil.png"
               alt="Imagen Usuario"
               sx={{

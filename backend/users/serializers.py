@@ -16,16 +16,7 @@ class PerfilUsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         # Indica que el serializer se basa en el modelo Usuario.
 
-        fields = [
-            "id",
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "direccion",
-            "telefono",
-            "rol",
-        ]
+        fields = '__all__'
         # Lista de campos que se incluirán en la respuesta JSON.
 
         read_only_fields = ["rol", "id"]

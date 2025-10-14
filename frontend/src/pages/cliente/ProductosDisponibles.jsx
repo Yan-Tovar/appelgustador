@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 import {
   Box,
   Typography,
@@ -10,14 +11,18 @@ import {
   CardActions,
   Button,
   TextField,
+  Snackbar,
   Alert,
+  useTheme,
 } from "@mui/material";
+import { ShoppingCart } from "@mui/icons-material";
 
 export default function ProductosDisponibles() {
+  const theme = useTheme();
   const [productos, setProductos] = useState([]);
   const [cantidades, setCantidades] = useState({});
-  const [error, setError] = useState(null); // Para mostrar errores de la API
-  const [loading, setLoading] = useState(true); // Para mostrar el estado de carga
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "info" });
+  const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("access");
   const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -26,25 +31,18 @@ export default function ProductosDisponibles() {
     fetchProductosDisponibles();
   }, []);
 
-  // Obtención de productos disponibles
   const fetchProductosDisponibles = async () => {
     try {
-      const res = await axios.get(
-        "http://127.0.0.1:8000/api/productos/disponibles/",
-        config
-      );
+      const res = await axios.get("http://127.0.0.1:8000/api/productos/disponibles/", config);
       setProductos(res.data);
-      setLoading(false);
     } catch (error) {
-      setError("Error al obtener productos disponibles. Intente de nuevo.");
+      Swal.fire("Error", "No se pudieron cargar los productos disponibles", "error");
+    } finally {
       setLoading(false);
-      console.error("Error al obtener productos disponibles:", error);
     }
   };
 
-  // Manejo de cambios en la cantidad de un producto
   const handleCantidadChange = (productId, value) => {
-    // Si no es un número o el valor es negativo, lo ponemos como 1
     const cantidad = Math.max(1, Math.min(value, productos.find((prod) => prod.id === productId)?.stock || 1));
     setCantidades((prev) => ({
       ...prev,
@@ -52,37 +50,24 @@ export default function ProductosDisponibles() {
     }));
   };
 
-  // Manejo de agregar al carrito
   const handleAddToCart = async (productId) => {
-    const cantidad = cantidades[productId] || 1; // Si no se digitó cantidad, usa 1
+    const cantidad = cantidades[productId] || 1;
     try {
       await axios.post(
         "http://127.0.0.1:8000/api/cart/add/",
         { product_id: productId, quantity: cantidad },
         config
       );
-      alert("Producto agregado al carrito!");
+      setSnackbar({ open: true, message: "Producto agregado al carrito", severity: "success" });
     } catch (error) {
       console.error("Error al agregar al carrito:", error);
-      setError("Error al agregar el producto al carrito. Intente de nuevo.");
+      Swal.fire("Error", "No se pudo agregar el producto al carrito", "error");
     }
-  };
-
-  // Renderiza un mensaje de error si lo hay
-  const renderError = () => {
-    if (error) {
-      return <Alert severity="error">{error}</Alert>;
-    }
-    return null;
   };
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        Productos Disponibles
-      </Typography>
+    <Box sx={{ mt: 4 }}>
 
-      {renderError()}
 
       {loading ? (
         <Typography variant="body1" color="textSecondary">
@@ -92,25 +77,34 @@ export default function ProductosDisponibles() {
         <Grid container spacing={3}>
           {productos.map((prod) => (
             <Grid item xs={12} sm={6} md={4} key={prod.id}>
-              <Card>
+              <Card
+                elevation={4}
+                sx={{
+                  borderRadius: 3,
+                  backgroundColor: theme.palette.background.paper,
+                  color: theme.palette.text.primary,
+                }}
+              >
                 {prod.imagen && (
                   <CardMedia
                     component="img"
-                    height="140"
+                    height="160"
                     image={prod.imagen}
                     alt={prod.nombre}
+                    sx={{ objectFit: "cover" }}
                   />
                 )}
                 <CardContent>
-                  <Typography variant="h6">{prod.nombre}</Typography>
-                  <Typography color="text.secondary">
+                  <Typography variant="h6" fontWeight="bold">
+                    {prod.nombre}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
                     Precio: ${prod.precio}
                   </Typography>
-                  <Typography color="text.secondary">
-                    Stock: {prod.stock}
+                  <Typography variant="body2" color="text.secondary">
+                    Stock disponible: {prod.stock}
                   </Typography>
 
-                  {/* Campo para elegir cantidad */}
                   <TextField
                     type="number"
                     label="Cantidad"
@@ -122,18 +116,21 @@ export default function ProductosDisponibles() {
                     inputProps={{
                       min: 1,
                       max: prod.stock,
-                      step: 1, 
+                      step: 1,
                     }}
-                    sx={{ mt: 1, width: "100px" }}
+                    sx={{ mt: 2, width: "100px" }}
                   />
                 </CardContent>
-                <CardActions>
+
+                <CardActions sx={{ px: 2, pb: 2 }}>
                   <Button
                     variant="contained"
                     color="primary"
+                    fullWidth
+                    startIcon={<ShoppingCart />}
                     onClick={() => handleAddToCart(prod.id)}
                   >
-                    Agregar al Carrito
+                    Agregar al carrito
                   </Button>
                 </CardActions>
               </Card>
@@ -141,6 +138,23 @@ export default function ProductosDisponibles() {
           ))}
         </Grid>
       )}
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
