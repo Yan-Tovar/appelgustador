@@ -1,33 +1,76 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
+// 'Router' envuelve toda la app para habilitar navegación por rutas.
+// 'Routes' contiene todas las rutas definidas.
+// 'Route' define cada ruta individual.
+// 'Navigate' permite redireccionar programáticamente.
 
-// Imports de Material UI
+import { useState, useEffect, useMemo } from "react";
+// Hooks para manejar estado local y efectos secundarios (como validar sesión).
+
+import axios from "axios";
+// Cliente HTTP para hacer peticiones al backend (por ejemplo, validar token).
+
+// Material UI
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-// Importar las páginas desde /pages
+// Importar los estilos del carrusel
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
+// PayPal
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+
+// Páginas y layouts
+import api from "./services/api";
+import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import DashboardLayout from "./components/layout/DashboardLayout";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import DashboardAdminLayout from "./layout/DashboardAdminLayout";
+import DashboardClienteLayout from "./layout/DashboardClienteLayout";
+import DashboardEmpleadoLayout from "./layout/DashboardEmpleadoLayout";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
-import DashboardEmpleado from "./pages/DashboardEmpleado";
-import DashboardCliente from "./pages/DashboardCliente";
+import DashboardEmpleado from "./pages/empleado/DashboardEmpleado";
+import DashboardCliente from "./pages/cliente/DashboardCliente";
 import Perfil from "./pages/Perfil";
-import Productos from "./pages/admin/Productos";
-import Categorias from "./pages/admin/Categorias";
-import api from "./api";
+import Productos from "./pages/empleado/Productos";
+import Categorias from "./pages/empleado/Categorias";
+import Carrusel from "./pages/empleado/Carrusel";
+import GestionUsuarios from "./pages/admin/GestionUsuarios";
+import CartPage from "./pages/cart/CartPage";
+import ProductosDisponibles from "./pages/cliente/ProductosDisponibles";
+import MyOrders from "./pages/cliente/MyOrders";
+import MyInvoices from "./pages/cliente/MyInvoices";
+import Ofertas from "./pages/empleado/Ofertas";
 
 function App() {
   // Tema global de Material UI
-  const theme = createTheme({
-    palette: {
-      mode: "light",
-      primary: { main: "#1976d2" },
-      secondary: { main: "#9c27b0" },
-    },
-  });
+   const [darkMode, setDarkMode] = useState(false);
+
+  // Crear tema dinámico
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: darkMode ? "dark" : "light",
+          primary: { main: "#EB2A05" },
+          secondary: { main: "#2e7d32" },
+          background: {
+            default: darkMode ? "#121212" : "#f4f4f4",
+            paper: darkMode ? "#1e1e1e" : "#ffffff",
+          },
+          text: {
+            primary: darkMode ? "#ffffff" : "#000000",
+            secondary: darkMode ? "#bbbbbb" : "#555555",
+          },
+        },
+      }),
+    [darkMode]
+  );
 
   // Estado global del usuario
   const [user, setUser] = useState(() => {
@@ -54,7 +97,7 @@ function App() {
     const token = localStorage.getItem("access");
     if (token) {
       api
-        .get("/users/me/") // ya tiene el interceptor
+        .get("/users/me/")
         .then((res) => setUser(res.data))
         .catch(() => localStorage.clear());
     }
@@ -63,42 +106,60 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Routes>
-          {/* Página inicial pública */}
-          <Route path="/" element={<Home />} />
+      {/* PayPalScriptProvider envuelve TODA la app */}
+      <PayPalScriptProvider options={{ "client-id": "AeeU3j2Gd6b68cD_47IIavwIIjchk9_I_3h33QBJZgBdUxGTfSIkoZiazXnwhxZJYD00EcgiVn0KRCn4" }}>
+        <Router>
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/register" element={<Register onRegister={handleLogin} />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
 
-          {/* Páginas públicas */}
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/register" element={<Register onRegister={handleLogin} />} />
+            {/* --- Admin --- */}
+            {user && user.rol === "administrador" && (
+              <Route path="/admin" element={<DashboardAdminLayout onLogout={handleLogout} />}>
+                <Route index element={<DashboardAdmin />} />
+                <Route path="perfil" element={<Perfil />} />
+                <Route path="gestionusuarios" element={<GestionUsuarios />} />
+              </Route>
+            )}
 
-          {/* --- Rutas protegidas --- */}
-          {user && user.rol === "administrador" && (
-            <Route path="/admin" element={<DashboardLayout onLogout={handleLogout} />}>
-              {/* aquí van las vistas hijas dentro del layout */}
-              <Route index element={<DashboardAdmin />} />
-              <Route path="productos" element={<Productos />} />
-              <Route path="categorias" element={<Categorias />} />
-              <Route path="perfil" element={<Perfil />} />
-            </Route>
-          )}
+            {/* --- Empleado --- */}
+            {user && user.rol === "empleado" && (
+              <Route path="/empleado" element={<DashboardEmpleadoLayout onLogout={handleLogout} />}> 
+                <Route index element={<DashboardEmpleado />} />
+                <Route path="perfil" element={<Perfil />} />
+                <Route path="productos" element={<Productos />} />
+                <Route path="categorias" element={<Categorias />} />
+                <Route path="carrusel" element={<Carrusel />} />
+                <Route path="ofertas" element={<Ofertas />} />
+              </Route>
+            )}
 
-          {user && user.rol === "empleado" && (
-            <Route path="/empleado" element={<DashboardEmpleado onLogout={handleLogout} />} />
-          )}
+            {/* --- Cliente --- */}
+            {user && user.rol === "cliente" && (
+              <Route path="/cliente" element={<DashboardClienteLayout onLogout={handleLogout} />}>
+                <Route index element={<ProductosDisponibles />} />
+                <Route path="perfil" element={<Perfil />} />
+                <Route path="cart" element={<CartPage />} />
+                <Route path="productos-disponibles" element={<ProductosDisponibles />} />
+                <Route path="pedidos" element={<MyOrders />} />
+                <Route path="facturas" element={<MyInvoices />} />
+              </Route>
+            )}
 
-          {user && user.rol === "cliente" && (
-            <Route path="/cliente" element={<DashboardCliente onLogout={handleLogout} />} />
-          )}
-
-          {/* Redirecciones por rol */}
-          {user ? (
-            <Route path="*" element={<Navigate to={`/${user.rol}`} replace />} />
-          ) : (
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          )}
-        </Routes>
-      </Router>
+            {/* Redirecciones */}
+            {user ? (
+              <Route path="*" element={<Navigate to={`/${user.rol}`} replace />} />
+            ) : (
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            )}
+          </Routes>
+        </Router>
+      </PayPalScriptProvider>
     </ThemeProvider>
   );
 }
