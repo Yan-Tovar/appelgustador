@@ -46,6 +46,7 @@ import ProductosDisponibles from "./pages/cliente/ProductosDisponibles";
 import MyOrders from "./pages/cliente/MyOrders";
 import MyInvoices from "./pages/cliente/MyInvoices";
 import Ofertas from "./pages/empleado/Ofertas";
+import Notas from "./pages/empleado/Notas";
 
 function App() {
   // Tema global de Material UI
@@ -136,6 +137,7 @@ function App() {
                 <Route path="categorias" element={<Categorias />} />
                 <Route path="carrusel" element={<Carrusel />} />
                 <Route path="ofertas" element={<Ofertas />} />
+                <Route path="notas" element={<Notas />} />
               </Route>
             )}
 

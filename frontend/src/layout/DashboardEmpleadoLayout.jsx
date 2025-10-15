@@ -28,6 +28,7 @@ import {
   ViewCarouselOutlined,
   LocalOfferOutlined,
   PersonOutline,
+  DescriptionOutlined,
 } from "@mui/icons-material";
 
 import Swal from "sweetalert2";
@@ -72,6 +73,7 @@ export default function DashboardEmpleadoLayout({ onLogout }) {
     { text: "Categorías", icon: <CategoryOutlined />, path: "/empleado/categorias" },
     { text: "Carrusel", icon: <ViewCarouselOutlined />, path: "/empleado/carrusel" },
     { text: "Ofertas", icon: <LocalOfferOutlined />, path: "/empleado/ofertas" },
+    { text: "Notas", icon: <DescriptionOutlined />, path: "/empleado/notas" },
     { text: "Perfil", icon: <PersonOutline />, path: "/empleado/perfil" },
   ];
 

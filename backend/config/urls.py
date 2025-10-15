@@ -56,6 +56,9 @@ urlpatterns = [
     
     path('api/offer/', include('offer.urls')),
     #Incluye las rutas de la app Offer.
+
+    path('api/notes/', include('notes.urls')),
+    #Incluye las rutas de la app Notes.
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

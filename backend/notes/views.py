@@ -1,14 +1,14 @@
-# Este archivo define las vistas para la app 'carrousel'.
+# Este archivo define las vistas para la app 'notes'.
 # Las vistas reciben las peticiones HTTP (GET, POST, PUT, DELETE), consultan los modelos, aplican permisos, y devuelven respuestas JSON usando los serializers.
 
 from rest_framework import generics, permissions
 # 'generics' proporciona vistas base para operaciones CRUD comunes (List, Create, Retrieve, Update, Destroy).
 # 'permissions' permite controlar quién puede acceder a cada vista.
 
-from .models import Carrusel
+from .models import Notes
 # Importa los modelos definidos en esta app. Se usarán para consultar la base de datos.
 
-from .serializers import CarruselSerializer
+from .serializers import NotesSerializer
 # Importa los serializers que transforman los datos del modelo en JSON y viceversa.
 
 from users.models import Usuario
@@ -24,30 +24,30 @@ class IsAdminOrEmpleado(permissions.BasePermission):
         # Si no cumple, se bloquea el acceso a la vista.
 
 # CRUD Carrusel
-class CarrouselListCreateView(generics.ListCreateAPIView):
-    # Vista que permite listar todos los items del carrusel (GET) y crear uno nuevo (POST).
+class NotesListCreateView(generics.ListCreateAPIView):
+    # Vista que permite listar todos las notas (GET) y crear una nueva (POST).
 
     def get_queryset(self):
-        return Carrusel.objects.filter(estado="activo")
-    serializer_class = CarruselSerializer
+        return Notes.objects.filter(estado="activo")
+    serializer_class = NotesSerializer
     permission_classes = [IsAdminOrEmpleado]
     # Solo administradores y empleados pueden acceder.
 
-class CarrouselRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    # Vista que permite obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) un item específico.
+class NotesRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    # Vista que permite obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) una nota específica.
 
-    queryset = Carrusel.objects.all()
-    serializer_class = CarruselSerializer
+    queryset = Notes.objects.all()
+    serializer_class = NotesSerializer
     permission_classes = [IsAdminOrEmpleado]
 
 # Flujo de datos
 
-    # El frontend hace una petición a /api/productos/productos/ o /api/productos/productos/5/.
+    # El frontend hace una petición a /api/notes/notas/ o /api/notes/notas/5/.
 
-    # Django busca la URL en productos/urls.py y la conecta con una de estas vistas.
+    # Django busca la URL en notes/urls.py y la conecta con una de estas vistas.
 
     # La vista verifica los permisos (IsAdminOrEmpleado).
 
-    # Si el usuario tiene acceso, se consulta el modelo (Producto o Categoria).
+    # Si el usuario tiene acceso, se consulta el modelo (Notes).
 
     # Los datos se transforman con el serializer y se devuelven en formato JSON al frontend.
