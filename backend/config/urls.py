@@ -59,6 +59,9 @@ urlpatterns = [
 
     path('api/notes/', include('notes.urls')),
     #Incluye las rutas de la app Notes.
+
+    path('api/history/', include('history.urls')),
+    #Incluye las rutas de la app History.
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

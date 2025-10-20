@@ -27,6 +27,7 @@ import {
   SettingsOutlined,
   PersonOutline,
   Logout,
+  HistoryOutlined,
 } from "@mui/icons-material";
 
 import Swal from "sweetalert2";
@@ -68,7 +69,7 @@ export default function DashboardAdminLayout({ onLogout }) {
   const menuItems = [
     { text: "Inicio", icon: <HomeOutlined />, path: "/admin" },
     { text: "Gestión Usuarios", icon: <PeopleOutline />, path: "/admin/gestionusuarios" },
-    // { text: "Configuración", icon: <SettingsOutlined />, path: "/admin/configuracion" },
+    { text: "Historial", icon: <HistoryOutlined />, path: "/admin/historial" },
     { text: "Perfil", icon: <PersonOutline />, path: "/admin/perfil" },
   ];
 

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'carrousel',                      # App personalizada para el carrusel.
     'offer',                          # App personalizada para las ofertas.
     'notes',                          # App personalizada para las notas.
+    'history',                        # App personalizada para el historial.
     'django.contrib.admin',           # Panel de administración.
     'django.contrib.auth',            # Sistema de autenticación.
     'django.contrib.contenttypes',    # Manejo de tipos de contenido.

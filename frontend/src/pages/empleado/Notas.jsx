@@ -49,7 +49,13 @@ export default function Notas() {
     }
   };
 
+  const isFormValid = titulo.trim() !== "" && detalle.trim() !== "";
+
   const handleCrear = async () => {
+    if (!isFormValid) {
+      showSnackbar("Por favor completa todos los campos", "error");
+      return;
+    }
     try {
       const formData = new FormData();
 

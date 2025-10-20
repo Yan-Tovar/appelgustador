@@ -100,7 +100,7 @@ export default function Categorias() {
       );
       setSnackbar({
         open: true,
-        message: "Categoría creada 🎉",
+        message: "Categoría creada ",
         severity: "success",
       });
       resetForm();

@@ -11,6 +11,17 @@ from .models import Carrusel
 from .serializers import CarruselSerializer
 # Importa los serializers que transforman los datos del modelo en JSON y viceversa.
 
+from history.models import History  
+# Importa el modelo de la app history para hacer los registros de historial.
+
+def registrar_historial(usuario, accion, objeto, detalle=None):
+    History.objects.create(
+        usuario=usuario,
+        accion=accion,
+        objeto=objeto,
+        detalle=detalle
+    )
+
 from users.models import Usuario
 # Importa el modelo de usuario personalizado. Se usa para verificar roles en los permisos.
 
@@ -33,12 +44,39 @@ class CarrouselListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrEmpleado]
     # Solo administradores y empleados pueden acceder.
 
+    def perform_create(self, serializer):
+        carrusel = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="creó el item de carrusel",
+            objeto=str(carrusel.id),
+            detalle=f"Nombre: {carrusel.nombre}"
+        )
+
 class CarrouselRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     # Vista que permite obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) un item específico.
 
     queryset = Carrusel.objects.all()
     serializer_class = CarruselSerializer
     permission_classes = [IsAdminOrEmpleado]
+
+    def perform_destroy(self, instance):
+        registrar_historial(
+            usuario=self.request.user,
+            accion="eliminó el item del carrusel: ",
+            objeto=str(instance.id),
+            detalle=f"Nombre: {instance.nombre}"
+        )
+        instance.delete()
+
+    def perform_update(self, serializer):
+        carrusel = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="actualizó el item del carrusel",
+            objeto=str(carrusel.id),
+            detalle=f"Nombre actualizado: {carrusel.nombre}, descripcion: {carrusel.descripcion}, estado: {carrusel.estado}"
+        )
 
 # Flujo de datos
 

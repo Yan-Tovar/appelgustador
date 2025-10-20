@@ -110,7 +110,7 @@ export default function Ofertas() {
         headers: { ...config.headers, "Content-Type": "multipart/form-data" },
       });
 
-      setSnackbar({ open: true, message: "Oferta creada 🎉", severity: "success" });
+      setSnackbar({ open: true, message: "Oferta creada ", severity: "success" });
       resetForm();
       fetchOffers();
     } catch {
@@ -153,7 +153,7 @@ export default function Ofertas() {
         headers: { ...config.headers, "Content-Type": "multipart/form-data" },
       });
 
-      setSnackbar({ open: true, message: "Oferta actualizada ✅", severity: "success" });
+      setSnackbar({ open: true, message: "Oferta actualizada", severity: "success" });
       resetForm();
       fetchOffers();
     } catch {

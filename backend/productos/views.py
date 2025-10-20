@@ -11,6 +11,17 @@ from .models import Categoria, Producto
 from .serializers import CategoriaSerializer, ProductoSerializer
 # Importa los serializers que transforman los datos del modelo en JSON y viceversa.
 
+from history.models import History  
+# Importa el modelo de la app history para hacer los registros de historial.
+
+def registrar_historial(usuario, accion, objeto, detalle=None):
+    History.objects.create(
+        usuario=usuario,
+        accion=accion,
+        objeto=objeto,
+        detalle=detalle
+    )
+
 from users.models import Usuario
 # Importa el modelo de usuario personalizado. Se usa para verificar roles en los permisos.
 
@@ -42,6 +53,15 @@ class CategoriaListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrEmpleado]
     # Aplica el permiso personalizado: solo administradores y empleados pueden acceder.
 
+    def perform_create(self, serializer):
+        categoria = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="creó la categoria",
+            objeto=str(categoria.id),
+            detalle=f"Nombre: {categoria.nombre}"
+        )
+
 class CategoriaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     Vista para obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) una categoría específica.
@@ -51,6 +71,24 @@ class CategoriaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategoriaSerializer
     permission_classes = [IsAdminOrEmpleado]
     # Igual que la vista anterior, pero aplicada a una categoría individual (por ID).
+
+    def perform_destroy(self, instance):
+        registrar_historial(
+            usuario=self.request.user,
+            accion="eliminó la categoria de id: ",
+            objeto=str(instance.id),
+            detalle=f"Nombre: {instance.nombre}"
+        )
+        instance.delete()
+
+    def perform_update(self, serializer):
+        categoria = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="actualizó la categoría",
+            objeto=str(categoria.id),
+            detalle=f"Nombre actualizado: {categoria.nombre}, descripcion: {categoria.descripcion}, estado: {categoria.estado}"
+        )
 
 # ------------------------------ CRUD Productos ------------------------------
 
@@ -64,6 +102,15 @@ class ProductoListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrEmpleado]
     # Solo administradores y empleados pueden acceder.
 
+    def perform_create(self, serializer):
+        producto = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="creó el producto",
+            objeto=str(producto.id),
+            detalle=f"Nombre: {producto.nombre}, Categoría: {producto.categoria.nombre}"
+        )
+
 class ProductoRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     Vista para obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) un producto específico.
@@ -73,6 +120,24 @@ class ProductoRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductoSerializer
     permission_classes = [IsAdminOrEmpleado]
     # Solo administradores y empleados pueden acceder.
+
+    def perform_destroy(self, instance):
+        registrar_historial(
+            usuario=self.request.user,
+            accion="eliminó el producto: ",
+            objeto=str(instance.id),
+            detalle=f"Nombre: {instance.nombre}"
+        )
+        instance.delete()
+
+    def perform_update(self, serializer):
+        producto = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="actualizó el producto: ",
+            objeto=str(producto.id),
+            detalle=f"Producto actualizado: {producto.nombre}, Categoria: {producto.categoria.nombre}, estado: {producto.estado}"
+        )
 
 # ------------------------------ Vistas para Productos Activos ------------------------------
 

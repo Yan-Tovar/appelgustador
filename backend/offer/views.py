@@ -11,6 +11,18 @@ from .models import Offer
 from .serializers import OfferSerializer
 # Importa los serializers que transforman los datos del modelo en JSON y viceversa.
 
+from history.models import History  
+# Importa el modelo de la app history para hacer los registros de historial.
+
+def registrar_historial(usuario, accion, objeto, detalle=None):
+    History.objects.create(
+        usuario=usuario,
+        accion=accion,
+        objeto=objeto,
+        detalle=detalle
+    )
+
+
 from users.models import Usuario
 # Importa el modelo de usuario personalizado. Se usa para verificar roles en los permisos.
 
@@ -33,12 +45,39 @@ class OfferListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrEmpleado]
     # Solo administradores y empleados pueden acceder.
 
+    def perform_create(self, serializer):
+        offer = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="creó la oferta",
+            objeto=str(offer.id_oferta),
+            detalle=f"Oferta {offer.id_oferta}, Id_Producto: {offer.id_producto}, Estado: {offer.estado}"
+        )
+
 class OfferRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     # Vista que permite obtener (GET), actualizar (PUT/PATCH) o eliminar (DELETE) una oferta específica.
 
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
     permission_classes = [IsAdminOrEmpleado]
+
+    def perform_destroy(self, instance):
+        registrar_historial(
+            usuario=self.request.user,
+            accion="eliminó la oferta: ",
+            objeto=str(instance.id_oferta),
+            detalle=f"Id_Oferta: {instance.id_oferta}"
+        )
+        instance.delete()
+
+    def perform_update(self, serializer):
+        offer = serializer.save()
+        registrar_historial(
+            usuario=self.request.user,
+            accion="actualizó la oferta",
+            objeto=str(offer.id_oferta),
+            detalle=f"Oferta {offer.id_oferta}, Id_Producto: {offer.id_producto}, Estado: {offer.estado}"
+        )
 
 # Flujo de datos
 

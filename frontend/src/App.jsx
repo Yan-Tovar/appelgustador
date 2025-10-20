@@ -47,6 +47,7 @@ import MyOrders from "./pages/cliente/MyOrders";
 import MyInvoices from "./pages/cliente/MyInvoices";
 import Ofertas from "./pages/empleado/Ofertas";
 import Notas from "./pages/empleado/Notas";
+import Historial from "./pages/admin/History";
 
 function App() {
   // Tema global de Material UI
@@ -125,6 +126,7 @@ function App() {
                 <Route index element={<DashboardAdmin />} />
                 <Route path="perfil" element={<Perfil />} />
                 <Route path="gestionusuarios" element={<GestionUsuarios />} />
+                <Route path="historial" element={<Historial />} />
               </Route>
             )}
 
