@@ -15,6 +15,27 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from .utils import generate_invoice_pdf
 
+from django.shortcuts import render
+from django.db.models import Q
+from rest_framework.views import APIView
+
+class BuscarFacturas(APIView):
+    def get(self, request):
+        query = request.query_params.get('q', '').strip()
+
+        if not query:
+            return Response({"error": "Debe proporcionar un parámetro de búsqueda (q)."}, status=status.HTTP_400_BAD_REQUEST)
+
+        invoices = Invoice.objects.filter(
+            Q(numero_factura__icontains=query) |
+            Q(fecha_emision__icontains=query) |
+            Q(total__icontains=query)   |
+            Q(estado__icontains=query)  
+        ).distinct()
+
+        serializer = InvoiceSerializer(invoices, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 def download_invoice_pdf(request, invoice_id):
     invoice = Invoice.objects.get(id=invoice_id)
     filepath = generate_invoice_pdf(invoice)
@@ -74,5 +95,12 @@ def create_invoice(request, order_id):
 def list_invoices(request):
     user = request.user
     invoices = Invoice.objects.filter(order__user=user).order_by("-fecha_emision")
+    serializer = InvoiceSerializer(invoices, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def lista_facturas(request):
+    invoices = Invoice.objects.order_by("-fecha_emision")
     serializer = InvoiceSerializer(invoices, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

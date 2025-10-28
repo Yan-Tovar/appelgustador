@@ -29,10 +29,10 @@ import {
   LocalOfferOutlined,
   PersonOutline,
   DescriptionOutlined,
+  ReceiptOutlined,
 } from "@mui/icons-material";
 
 import Swal from "sweetalert2";
-import SearchBar from "../components/features/SearchBar";
 import ProfileMenu from "../components/features/ProfileMenu";
 import SnackbarAlert from "../components/common/SnackbarAlert";
 
@@ -74,6 +74,7 @@ export default function DashboardEmpleadoLayout({ onLogout }) {
     { text: "Carrusel", icon: <ViewCarouselOutlined />, path: "/empleado/carrusel" },
     { text: "Ofertas", icon: <LocalOfferOutlined />, path: "/empleado/ofertas" },
     { text: "Notas", icon: <DescriptionOutlined />, path: "/empleado/notas" },
+    { text: "Facturas", icon: <ReceiptOutlined />, path: "/empleado/Facturas" },
     { text: "Perfil", icon: <PersonOutline />, path: "/empleado/perfil" },
   ];
 
@@ -179,8 +180,6 @@ export default function DashboardEmpleadoLayout({ onLogout }) {
           <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: "bold" }}>
             El Gustador
           </Typography>
-
-          <SearchBar />
 
           <IconButton color="inherit" onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? <Brightness7 /> : <Brightness4 />}

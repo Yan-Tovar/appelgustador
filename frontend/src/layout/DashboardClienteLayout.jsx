@@ -31,7 +31,6 @@ import {
 } from "@mui/icons-material";
 
 import Swal from "sweetalert2";
-import SearchBar from "../components/features/SearchBar";
 import ProfileMenu from "../components/features/ProfileMenu";
 import SnackbarAlert from "../components/common/SnackbarAlert";
 
@@ -178,7 +177,6 @@ export default function DashboardClienteLayout({ onLogout }) {
             El Gustador
           </Typography>
 
-          <SearchBar />
 
           <IconButton color="inherit" onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? <Brightness7 /> : <Brightness4 />}

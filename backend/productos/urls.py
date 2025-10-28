@@ -12,6 +12,7 @@ from .views import (
     ProductoRetrieveUpdateDestroyView,
     ProductosDisponiblesView,
     ProductosDisponiblesDashboardView,
+    BuscarProductos,
 )
 # Importa las vistas que manejarán las operaciones CRUD para categorías y productos.
 # Estas vistas están basadas en clases (Class-Based Views) y usan DRF para responder con JSON.
@@ -40,6 +41,9 @@ urlpatterns = [
     
     path("dashboard/", ProductosDisponiblesDashboardView.as_view(), name="productos-disponibles-dashboard"),
     #Ruta para obtener el listado de productos solamente disponibles para el flujo de compra sin necesidad de logearse
+
+    path("buscar/", BuscarProductos.as_view(), name='buscar_productos'),
+    #Ruta para buscar productos disponibles
 ]
 
 # Flujo de datos

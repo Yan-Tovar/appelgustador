@@ -48,6 +48,7 @@ import MyInvoices from "./pages/cliente/MyInvoices";
 import Ofertas from "./pages/empleado/Ofertas";
 import Notas from "./pages/empleado/Notas";
 import Historial from "./pages/admin/History";
+import Facturas from "./pages/empleado/Facturas";
 
 function App() {
   // Tema global de Material UI
@@ -140,6 +141,7 @@ function App() {
                 <Route path="carrusel" element={<Carrusel />} />
                 <Route path="ofertas" element={<Ofertas />} />
                 <Route path="notas" element={<Notas />} />
+                <Route path="facturas" element={<Facturas />} />
               </Route>
             )}
 

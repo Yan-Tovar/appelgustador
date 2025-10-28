@@ -16,6 +16,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { ShoppingCart } from "@mui/icons-material";
+import SearchBar from "../../components/features/SearchBarProductos";
 
 export default function ProductosDisponibles() {
   const theme = useTheme();
@@ -65,16 +66,24 @@ export default function ProductosDisponibles() {
     }
   };
 
+  const handleResultadosBusqueda = (resultados) => {
+    setProductos(resultados);
+  };
+
   return (
     <Box sx={{ mt: 4 }}>
-
+      <SearchBar onResults={handleResultadosBusqueda} />
 
       {loading ? (
         <Typography variant="body1" color="textSecondary">
           Cargando productos...
         </Typography>
+      ) : productos.length === 0 ? (
+        <Typography variant="body1" color="textSecondary">
+          No se encontraron productos.
+        </Typography>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ mt: 2 }}>
           {productos.map((prod) => (
             <Grid item xs={12} sm={6} md={4} key={prod.id}>
               <Card
@@ -89,7 +98,13 @@ export default function ProductosDisponibles() {
                   <CardMedia
                     component="img"
                     height="160"
-                    image={prod.imagen}
+                    image={
+                      prod.imagen
+                        ? prod.imagen.startsWith("http")
+                          ? prod.imagen
+                          : `http://localhost:8000${prod.imagen}`
+                        : "/images/producto-sin-imagen.png"
+                    }
                     alt={prod.nombre}
                     sx={{ objectFit: "cover" }}
                   />

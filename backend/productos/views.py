@@ -14,6 +14,12 @@ from .serializers import CategoriaSerializer, ProductoSerializer
 from history.models import History  
 # Importa el modelo de la app history para hacer los registros de historial.
 
+from django.shortcuts import render
+from django.db.models import Q
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+
 def registrar_historial(usuario, accion, objeto, detalle=None):
     History.objects.create(
         usuario=usuario,
@@ -22,6 +28,24 @@ def registrar_historial(usuario, accion, objeto, detalle=None):
         detalle=detalle
     )
 
+class BuscarProductos(APIView):
+    def get(self, request):
+        query = request.query_params.get('q', '').strip()
+
+        if not query:
+            return Response({"error": "Debe proporcionar un parámetro de búsqueda (q)."}, status=status.HTTP_400_BAD_REQUEST)
+
+        productos = Producto.objects.filter(
+            estado="activo"  
+        ).filter(
+            Q(nombre__icontains=query) |
+            Q(precio__icontains=query) |
+            Q(categoria__nombre__icontains=query)
+        ).distinct()
+
+        serializer = ProductoSerializer(productos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 from users.models import Usuario
 # Importa el modelo de usuario personalizado. Se usa para verificar roles en los permisos.
 
