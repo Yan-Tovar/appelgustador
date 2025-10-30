@@ -24,6 +24,7 @@ import {
   Inventory2 as StockIcon,
   Image as ImageIcon,
 } from "@mui/icons-material";
+import SearchBar from "../../components/features/SearchBarProductos";
 
 export default function Productos() {
   const theme = useTheme();
@@ -153,7 +154,7 @@ export default function Productos() {
         { ...config, headers: { ...config.headers, "Content-Type": "multipart/form-data" } }
       );
 
-      setSnackbar({ open: true, message: "Producto actualizado ✅", severity: "success" });
+      setSnackbar({ open: true, message: "Producto actualizado ", severity: "success" });
       setEditingId(null);
       resetForm();
       fetchProductos();
@@ -178,11 +179,15 @@ export default function Productos() {
         `http://127.0.0.1:8000/api/productos/productos/${id}/`,
         config
       );
-      setSnackbar({ open: true, message: "Producto eliminado 🗑️", severity: "info" });
+      setSnackbar({ open: true, message: "Producto eliminado ", severity: "info" });
       fetchProductos();
     } catch (err) {
       Swal.fire("Error", "No se pudo eliminar el producto", "error");
     }
+  };
+
+  const handleResultadosBusqueda = (resultados) => {
+    setProductos(resultados);
   };
 
   return (
@@ -296,55 +301,69 @@ export default function Productos() {
         </Grid>
       </Grid>
 
-      {/* Lista de productos */}
-      <Grid container spacing={3}>
-        {productos.map(prod => (
-          <Grid item xs={12} sm={6} md={4} key={prod.id}>
-            <Card
-              elevation={3}
-              sx={{
-                borderRadius: 2,
-                backgroundColor: theme.palette.background.paper,
-              }}
-            >
-              {prod.imagen && (
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={prod.imagen}
-                  alt={prod.nombre}
-                />
-              )}
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold">
-                  {prod.nombre}
-                </Typography>
-                <Typography color="text.secondary">
-                  Precio: ${prod.precio}
-                </Typography>
-                <Typography color="text.secondary">
-                  Stock: {prod.stock}
-                </Typography>
-                <Typography color="text.secondary">
-                  Categoría: {prod.categoria}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" onClick={() => handleEditar(prod)}>
-                  Editar
-                </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  onClick={() => handleEliminar(prod.id)}
-                >
-                  Eliminar
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {/* Input de búsqueda */}
+      <SearchBar onResults={handleResultadosBusqueda} />
+
+      {/* Renderizado de productos (cargados o buscados) */}
+      {productos.length === 0 ? (
+        <Typography variant="body1" color="textSecondary" sx={{ mt: 2 }}>
+          No se encontraron productos.
+        </Typography>
+      ) : (
+        <Grid container spacing={3} sx={{ mt: 2 }}>
+          {productos.map((prod) => (
+            <Grid item xs={12} sm={6} md={4} key={prod.id}>
+              <Card
+                elevation={3}
+                sx={{
+                  borderRadius: 2,
+                  backgroundColor: theme.palette.background.paper,
+                }}
+              >
+                {prod.imagen && (
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={
+                      prod.imagen.startsWith("http")
+                        ? prod.imagen
+                        : `http://localhost:8000${prod.imagen}`
+                    }
+                    alt={prod.nombre}
+                    sx={{ objectFit: "cover" }}
+                  />
+                )}
+                <CardContent>
+                  <Typography variant="h6" fontWeight="bold">
+                    {prod.nombre}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Precio: ${prod.precio}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Stock: {prod.stock}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Categoría: {prod.categoria}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" onClick={() => handleEditar(prod)}>
+                    Editar
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => handleEliminar(prod.id)}
+                  >
+                    Eliminar
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
       {/* Snackbar */}
       <Snackbar

@@ -13,6 +13,7 @@ from .views import (
     ProductosDisponiblesView,
     ProductosDisponiblesDashboardView,
     BuscarProductos,
+    BuscarCategorias,
 )
 # Importa las vistas que manejarán las operaciones CRUD para categorías y productos.
 # Estas vistas están basadas en clases (Class-Based Views) y usan DRF para responder con JSON.
@@ -44,6 +45,9 @@ urlpatterns = [
 
     path("buscar/", BuscarProductos.as_view(), name='buscar_productos'),
     #Ruta para buscar productos disponibles
+
+    path("buscarcategorias/", BuscarCategorias.as_view(), name='buscar_categorias'),
+    #Ruta para buscar categorias disponibles
 ]
 
 # Flujo de datos

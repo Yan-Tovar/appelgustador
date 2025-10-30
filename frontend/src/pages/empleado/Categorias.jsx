@@ -22,6 +22,7 @@ import {
   Description as DescriptionIcon,
   Image as ImageIcon,
 } from "@mui/icons-material";
+import SearchBar from "../../components/features/SearchBarCategorias";
 
 export default function Categorias() {
   const theme = useTheme();
@@ -186,6 +187,10 @@ export default function Categorias() {
     }
   };
 
+  const handleResultadosBusqueda = (resultados) => {
+    setCategorias(resultados);
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
@@ -287,8 +292,11 @@ export default function Categorias() {
         </Grid>
       </Grid>
 
+      {/* Input de búsqueda */}
+      <SearchBar onResults={handleResultadosBusqueda} />
+      
       {/* Lista de categorías */}
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ mt: 2 }}>
         {categorias.map((cat) => (
           <Grid item xs={12} sm={6} md={4} key={cat.id}>
             <Card
@@ -298,37 +306,51 @@ export default function Categorias() {
                 backgroundColor: theme.palette.background.paper,
               }}
             >
+              {cat.imagen ? (
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={
+                    cat.imagen.startsWith("http")
+                      ? cat.imagen
+                      : `http://localhost:8000${cat.imagen}`
+                  }
+                  alt={cat.nombre}
+                  sx={{ objectFit: "cover" }}
+                />
+              ) : (
+                <Box
+                  sx={{
+                    height: 140,
+                    backgroundColor: "#eee",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography variant="body2" color="textSecondary">
+                    Sin imagen
+                  </Typography>
+                </Box>
+              )}
+
               <CardContent>
-                {cat.imagen && (
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={cat.imagen}
-                    alt={cat.nombre}
-                  />
-                )}
                 <Typography variant="h6" fontWeight="bold">
                   {cat.nombre}
                 </Typography>
                 <Typography color="text.secondary" sx={{ mb: 2 }}>
-                  {cat.descripcion}
+                  {cat.descripcion || "Sin descripción"}
                 </Typography>
-                <CardActions>
-                  <Button
-                    size="small"
-                    onClick={() => handleEditar(cat)}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    size="small"
-                    color="error"
-                    onClick={() => handleEliminar(cat.id)}
-                  >
-                    Eliminar
-                  </Button>
-                </CardActions>
               </CardContent>
+
+              <CardActions>
+                <Button size="small" onClick={() => handleEditar(cat)}>
+                  Editar
+                </Button>
+                <Button size="small" color="error" onClick={() => handleEliminar(cat.id)}>
+                  Eliminar
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
         ))}
