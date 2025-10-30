@@ -7,7 +7,10 @@ from . import views
 urlpatterns = [
 
     path("", views.list_user_orders, name="list_orders"),
-    #Ruta para listar los pedidos
+    #Ruta para listar los pedidos del Usuario
+
+    path("pedidos/", views.list_orders, name="list_orders"),
+    #Ruta para listar todos los pedidos
 
     path("create/", views.create_order_from_cart, name="create_order"),
     # Ruta para crear un pedido.

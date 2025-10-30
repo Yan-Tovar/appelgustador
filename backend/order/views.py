@@ -25,6 +25,16 @@ def list_user_orders(request):
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# -----------------------------
+# Vista 1: Listar todas las órdenes
+# -----------------------------
+@api_view(["GET"])  # Solo permite GET
+@permission_classes([IsAuthenticated])  # Requiere autenticación
+def list_orders(request):
+    orders = Order.objects.order_by("-created_at")
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 # -----------------------------
 # Vista 2: Crear orden a partir del carrito

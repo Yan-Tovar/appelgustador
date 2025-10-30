@@ -8,7 +8,7 @@ export default function SearchBarCategorias({ onResults }) {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/productos/buscarcateogoria/", {
+      const response = await axios.get("http://localhost:8000/api/productos/buscarcategorias/", {
         params: { q: query },
       });
       onResults(response.data);

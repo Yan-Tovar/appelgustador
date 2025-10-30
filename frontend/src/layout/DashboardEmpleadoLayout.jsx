@@ -30,6 +30,7 @@ import {
   PersonOutline,
   DescriptionOutlined,
   ReceiptOutlined,
+  BorderColorOutlined,
 } from "@mui/icons-material";
 
 import Swal from "sweetalert2";
@@ -74,6 +75,7 @@ export default function DashboardEmpleadoLayout({ onLogout }) {
     { text: "Carrusel", icon: <ViewCarouselOutlined />, path: "/empleado/carrusel" },
     { text: "Ofertas", icon: <LocalOfferOutlined />, path: "/empleado/ofertas" },
     { text: "Notas", icon: <DescriptionOutlined />, path: "/empleado/notas" },
+    { text: "Pedidos", icon: <BorderColorOutlined />, path: "/empleado/pedidos" },
     { text: "Facturas", icon: <ReceiptOutlined />, path: "/empleado/Facturas" },
     { text: "Perfil", icon: <PersonOutline />, path: "/empleado/perfil" },
   ];
